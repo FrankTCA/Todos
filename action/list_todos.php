@@ -1,6 +1,6 @@
 <?php
 require_once "../../sso/common.php";
-require "creds.php";
+require "../creds.php";
 validate_token("https://infotoast.org/todos/action/create_todo.php");
 
 $user_id = get_user_id();
@@ -25,7 +25,7 @@ $sql->execute();
 if ($result = $sql->get_result()) {
     echo '{[';
     while ($row = $result->fetch_assoc()) {
-        echo "{\"id\": " . $row['id'] . ", \"name\": " . $row["name"] . ", \"description\":" . $row["description"] . ", \"completion_method\":" . $row["completion_method"] . ", \"how_complete\":" . $row["how_complete"] . ", \"created\":" . $row["created"] . "},";
+        echo "{\"id\": " . $row['id'] . ", \"name\": " . $row["name"] . ", \"description\":" . $row["description"] . ", \"completion_method\":" . $row["completion_method"] . ", \"how_complete\":" . $row["how_complete"] . ", \"due_date\":" . $row["due_date"] . ", \"created\":" . $row["created"] . "},";
     }
     echo "]}";
 }

@@ -1,6 +1,6 @@
 <?php
 require_once "../../sso/common.php";
-require "creds.php";
+require "../creds.php";
 validate_token("https://infotoast.org/todos/action/create_todo.php");
 
 if (!(not_null($_POST["task_name"]) && not_null($_POST["description"]))) {
@@ -9,6 +9,7 @@ if (!(not_null($_POST["task_name"]) && not_null($_POST["description"]))) {
 
 $name = $_POST["task_name"];
 $description = $_POST["description"];
+$due = $_POST["due"];
 $user_id = get_user_id();
 
 if (isset($_POST["subtask"])) {
@@ -29,13 +30,14 @@ if ($conn->connect_error) {
     die("dberror");
 }
 
-$sql = $conn->prepare("INSERT INTO tasks (user_id, name, description, subtask_of, completion_method) VALUES (?, ?, ?, ?, ?);");
+$sql = $conn->prepare("INSERT INTO tasks (user_id, name, description, subtask_of, completion_method, due_date) VALUES (?, ?, ?, ?, ?, ?);");
 $uid = $user_id;
 $taskname = $name;
 $taskdesc = $description;
 $st = $subtask_of;
 $comp_meth = $completion_method;
-$sql->bind_param('issii', $uid, $taskname, $taskdesc, $st, $comp_meth);
+$due_date = $due;
+$sql->bind_param('issii', $uid, $taskname, $taskdesc, $st, $comp_meth, $due_date);
 $sql->execute();
 $conn->commit();
 $conn->close();
