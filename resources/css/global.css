@@ -1,0 +1,120 @@
+.top {
+    position: fixed;
+    z-index: 9999;
+    display: block;
+    background-color: aliceblue;
+    width: 100%;
+    padding: 2px;
+    margin-top: -10px;
+    margin-bottom: 10px;
+}
+.topleft {
+    float: left;
+    padding-left: 2em;
+    padding-top: 0.2em;
+}
+
+h1 {
+    font-family: "Arial", sans-serif;
+    padding-top: 0.3em;
+}
+
+h2 {
+    font-family: "Roboto Light", sans-serif;
+}
+
+.topright {
+    float: right;
+    padding-right: 3em;
+    padding-top: 1em;
+    padding-bottom: 1em;
+}
+
+.loginbutton {
+    border: black 1px solid;
+    background-color: white;
+    box-shadow: black 2px 2px;
+    height: 70px;
+    line-height: 70px;
+}
+
+a {
+    color: black;
+}
+
+a:link {
+    text-decoration: none;
+}
+
+a:visited {
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: none;
+}
+
+a:active {
+    text-decoration: none;
+}
+
+text {
+    font-family: "Roboto Light", sans-serif;
+}
+
+#loginText {
+    margin-left: auto;
+    margin-right: auto;
+    padding-bottom: 18px;
+    display: inline-block;
+    vertical-align: middle;
+    line-height: normal;
+    padding-right: 4px;
+    font-family: "Arial", sans-serif;
+}
+
+.user {
+    vertical-align: sub;
+    padding-top: 10px;
+}
+
+.iconBodyHeader {
+    padding-top: 15px;
+    padding-bottom: 10px;
+}
+
+#firstHeader {
+    padding-top: 100px;
+}
+
+.icon {
+    display: inline-block;
+    padding: 1em 1em 1em 1em;
+    border: black hidden;
+    border-radius: 3px;
+    margin-right: 2em;
+    margin-left: 1em;
+    box-shadow: black 3px 3px;
+}
+
+.pricemarker {
+    vertical-align: top;
+    margin-right: -10px;
+    color: aliceblue;
+    font-family: "Roboto Light", sans-serif;
+}
+
+.appName {
+    text-align: center;
+    color: aliceblue;
+    font-family: "Roboto Light", sans-serif;
+    padding-bottom: 1em;
+}
+
+.serviceIcon {
+    padding-top: 2em;
+    padding-left: 4em;
+    padding-right: 1em;
+    margin-left: auto;
+    margin-right: auto;
+}

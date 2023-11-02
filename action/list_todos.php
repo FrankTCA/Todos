@@ -23,6 +23,7 @@ $sql->bind_param('ii', $uid, $subtask_of);
 $sql->execute();
 
 if ($result = $sql->get_result()) {
+    header("Content-Type: application/json");
     echo '{[';
     while ($row = $result->fetch_assoc()) {
         echo "{\"id\": " . $row['id'] . ", \"name\": " . $row["name"] . ", \"description\":" . $row["description"] . ", \"completion_method\":" . $row["completion_method"] . ", \"how_complete\":" . $row["how_complete"] . ", \"due_date\":" . $row["due_date"] . ", \"created\":" . $row["created"] . "},";
