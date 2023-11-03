@@ -20,14 +20,13 @@
             margin: 0;
         }
 
-        .task:hover {
+        .task:hover:not(:has(.task:hover)) {
             padding: 10px;
             border: 5px solid #d9a2f5;
             background-color: #361b45;
             color: white;
             min-width: 50%;
             margin: 0;
-        }
         .task_list {
             list-style-type: none;
             padding-left: 0;
