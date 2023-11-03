@@ -65,13 +65,21 @@
                 new_div.setAttribute("class", "task");
 
                 var name_header = document.createElement("h3");
-                name_header.innerHTML = task.subtasks[i].name;
+                if (task.subtasks[i].completed) {
+                    var strike_through = document.createElement("strike");
+                    strike_through.innerHTML = task.subtasks[i].name;
+                    name_header.appendChild(strike_through);
+                }
+                else {
+                    name_header.innerHTML = task.subtasks[i].name;
+                }
                 new_div.appendChild(name_header);
     
-                var completion_checkmark = document.createElement("input");
-                completion_checkmark.type = "checkbox";
-                completion_checkmark.setAttribute("onclick", "toggle_completion('" + id + "', '" + i + "')");
-                new_div.appendChild(completion_checkmark);
+                var completion_checkbox = document.createElement("input");
+                completion_checkbox.type = "checkbox";
+                completion_checkbox.setAttribute("onclick", "toggle_completion('" + id + "', '" + i + "')");
+                completion_checkbox.checked = task.subtasks[i].completed;
+                new_div.appendChild(completion_checkbox);
     
                 var desc_par = document.createElement("p");
                 desc_par.innerHTML = task.subtasks[i].desc;
@@ -109,6 +117,7 @@
             task.subtasks.push({
                 name: document.getElementById("add_name").value,
                 desc: document.getElementById("add_desc").value,
+                completed: false,
                 subtasks: [],
             });
 
@@ -123,7 +132,8 @@
 
         function toggle_completion(parent_id, i) {
             var task = get_task_from_id(parent_id);
-            task.completed = !task.completed;
+            task.subtasks[i].completed = !task.subtasks[i].completed;
+            display_task(task, parent_id);
         }
     </script>
 
