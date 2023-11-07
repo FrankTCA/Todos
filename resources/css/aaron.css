@@ -1,0 +1,26 @@
+body {
+    font-family: sans;
+    background-color: #12121f;
+    color: white;
+}
+.task {
+    padding: 10px;
+    border: 5px solid #d9a2f5;
+    background-color: #190424;
+    color: white;
+    min-width: 50%;
+    margin: 0;
+}
+
+.task:hover:not(:has(.task:hover)) { /* Todo: This only works for newer (2023 +) versions of browsers. Implement this another way. */
+    padding: 10px;
+    border: 5px solid #d9a2f5;
+    background-color: #361b45;
+    color: white;
+    min-width: 50%;
+    margin: 0;
+}
+.task_list {
+    list-style-type: none;
+    padding-left: 0;
+}
