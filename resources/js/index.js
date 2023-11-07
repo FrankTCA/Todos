@@ -24,14 +24,23 @@ $(document).ready(function() {
         })
     });*/
 
+    var addTaskActive = false;
     $("#addTaskDropdown").hide();
     $("#addTaskButton").click(function() {
-        $("#addTaskDropdown").show().position({
-            my: "right top",
-            at: "right bottom",
-            of: $("#addTaskButton"),
-            collision: "none"
-        });
+        if (!addTaskActive) {
+            $("#addTaskDropdown").show().position({
+                my: "right top",
+                at: "right bottom",
+                of: $("#addTaskButton"),
+                collision: "none"
+            });
+            $("#addTaskButton").text("-");
+            addTaskActive = true;
+        } else {
+            $("#addTaskDropdown").hide();
+            $("#addTaskButton").text("+");
+            addTaskActive = false;
+        }
     });
 });
 

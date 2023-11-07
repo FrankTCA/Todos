@@ -5,6 +5,8 @@
 
 .dropdown {
     background-color: whitesmoke;
+    width: 40%;
+    height: 50%;
     padding: 1em;
     border-radius: 5px;
     box-shadow: #190424 5px 5px;
@@ -35,6 +37,8 @@
     position: absolute;
     top: 3em;
     right: 1em;
+    width: 40%;
+    height: 30%;
 }
 
 .textBox {
