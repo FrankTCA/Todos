@@ -20,13 +20,14 @@
             margin: 0;
         }
 
-        .task:hover:not(:has(.task:hover)) {
+        .task:hover:not(:has(.task:hover)) { /* Todo: This only works for newer (2023 +) versions of browsers. Implement this another way. */
             padding: 10px;
             border: 5px solid #d9a2f5;
             background-color: #361b45;
             color: white;
             min-width: 50%;
             margin: 0;
+         }
         .task_list {
             list-style-type: none;
             padding-left: 0;
@@ -39,7 +40,7 @@
             name: "global_task",
             desc: "",
             subtasks: [],
-            completed: false,
+            progress: 0,
         };
 
         function get_task_from_id(id) {
@@ -47,6 +48,20 @@
             var task = global_task;
             for (var i = 1; i < indices.length; i++) {
                 task = task.subtasks[Number(indices[i])];
+            }
+
+            return task;
+        }
+
+        function get_parent_task_from_id(id) {
+            var indices = id.split(":");
+            var task = global_task;
+            for (var i = 1; i < indices.length - 1; i++) {
+                task = task.subtasks[Number(indices[i])];
+            }
+
+            if (task == global_task) {
+                return -1;
             }
 
             return task;
@@ -64,8 +79,23 @@
                 var new_div = document.createElement("div");
                 new_div.setAttribute("class", "task");
 
+
+                if (task.subtasks[i].subtasks.length > 0) {
+                    var progress = document.createElement("progress");
+                    progress.value = task.subtasks[i].progress;
+                    progress.max = 100;
+                    new_div.appendChild(progress);
+                }
+                else {
+                    var completion_checkbox = document.createElement("input");
+                    completion_checkbox.type = "checkbox";
+                    completion_checkbox.setAttribute("onclick", "toggle_completion('" + id + "', '" + i + "')");
+                    completion_checkbox.checked = task.subtasks[i].progress == 100 ? true : false;
+                    new_div.appendChild(completion_checkbox);
+                }
+
                 var name_header = document.createElement("h3");
-                if (task.subtasks[i].completed) {
+                if (task.subtasks[i].progress == 100) {
                     var strike_through = document.createElement("strike");
                     strike_through.innerHTML = task.subtasks[i].name;
                     name_header.appendChild(strike_through);
@@ -74,12 +104,7 @@
                     name_header.innerHTML = task.subtasks[i].name;
                 }
                 new_div.appendChild(name_header);
-    
-                var completion_checkbox = document.createElement("input");
-                completion_checkbox.type = "checkbox";
-                completion_checkbox.setAttribute("onclick", "toggle_completion('" + id + "', '" + i + "')");
-                completion_checkbox.checked = task.subtasks[i].completed;
-                new_div.appendChild(completion_checkbox);
+                // Todo: Grey out task when completed.
     
                 var desc_par = document.createElement("p");
                 desc_par.innerHTML = task.subtasks[i].desc;
@@ -114,12 +139,18 @@
             var id = document.getElementById("set_parent_task").value;
             var task = get_task_from_id(id);
 
+            if (task.progress == 100 && task.subtasks.length == 0) {
+                task.progress = 0;
+            }
+
             task.subtasks.push({
                 name: document.getElementById("add_name").value,
                 desc: document.getElementById("add_desc").value,
-                completed: false,
                 subtasks: [],
+                progress: 0,
             });
+
+            update_progress(global_task);
 
             display_task(global_task, "global_task");
         }
@@ -130,10 +161,23 @@
             display_task(task, parent_id);
         }
 
+        function update_progress(task) {
+            if (task.subtasks.length > 0) {
+                task.progress = 0;
+                for (var i = 0; i < task.subtasks.length; i++) {
+                    update_progress(task.subtasks[i]);
+                    task.progress += task.subtasks[i].progress;
+                }
+                task.progress /= task.subtasks.length; // Note(Aaron): My editor doesn't like \/= so I'm adding this comment to escape it./
+            }
+        }
+
         function toggle_completion(parent_id, i) {
             var task = get_task_from_id(parent_id);
-            task.subtasks[i].completed = !task.subtasks[i].completed;
-            display_task(task, parent_id);
+            task.subtasks[i].progress = 100 - task.subtasks[i].progress;
+            update_progress(global_task);
+
+            display_task(global_task, "global_task");
         }
     </script>
 
