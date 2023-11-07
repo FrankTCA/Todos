@@ -1,7 +1,7 @@
 body {
-    font-family: sans;
-    background-color: #12121f;
-    color: white;
+    font-family: "Roboto Light", sans-serif;
+    /*background-color: #12121f;*/
+    color: black;
 }
 .task {
     padding: 10px;

@@ -1,5 +1,5 @@
-/*$(document).ready(function() {
-    $("#errorMsg").hide();
+$(document).ready(function() {
+    /*$("#errorMsg").hide();
     $("#pastDueHeader").hide();
     $("#pastDue").hide();
     $("#currentHeader").hide();
@@ -22,8 +22,18 @@
                 $("#pastDueTable").append("<tr><td>" + element.name + "</td><td>" + element.description + "</td><td>" + element.due_date + "</td><td><span class='completion'>" + element.how_complete + )
             }
         })
+    });*/
+
+    $("#addTaskDropdown").hide();
+    $("#addTaskButton").click(function() {
+        $("#addTaskDropdown").show().position({
+            my: "right top",
+            at: "right bottom",
+            of: $("#addTaskButton"),
+            collision: "none"
+        });
     });
-});*/
+});
 
 var global_task = {
     name: "global_task",

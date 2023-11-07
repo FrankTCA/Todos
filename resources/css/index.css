@@ -2,3 +2,54 @@
     color: red;
     font-family: "Roboto Light", sans-serif;
 }
+
+.dropdown {
+    background-color: whitesmoke;
+    padding: 1em;
+    border-radius: 5px;
+    box-shadow: #190424 5px 5px;
+}
+
+#addTaskButton {
+    font-family: "Arial Black", sans-serif;
+    font-size: x-large;
+    background-color: aliceblue;
+    border: 2px solid white;
+    display: inline-block;
+    float: right;
+    margin-top: 5em;
+    margin-right: 2em;
+    box-shadow: black 2px 2px;
+}
+
+#addTaskButton:active {
+    box-shadow: black 0px 0px;
+}
+
+.topright {
+    display: inline-block;
+}
+
+.addTaskArea {
+    float: right;
+    position: absolute;
+    top: 3em;
+    right: 1em;
+}
+
+.textBox {
+    border: 0px solid white;
+    margin-bottom: 5%;
+    margin-top: 5%;
+    text-align: center;
+    margin-left: 2%;
+    padding: 3%;
+    width: 70%;
+    transition: 0.3s;
+    font-family: "Roboto", sans-serif;
+}
+
+.textBox:focus {
+    border:0;
+    border-bottom: 3px solid coral;
+}
