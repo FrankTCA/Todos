@@ -1,64 +1,39 @@
-$(document).ready(function() {
-    /*$("#errorMsg").hide();
-    $("#pastDueHeader").hide();
-    $("#pastDue").hide();
-    $("#currentHeader").hide();
-    $("#current").hide();
-    $("#doneHeader").hide();
-    $("done").hide();
-    const currentDate = new Date();
-    $.get("action/list_todos.php", function (data, status) {
-        if (status !== 200) {
-            $("#errorMsg").text("There was an error! Error code: " + data + ". Please email this to frank@infotoast.org.").show();
-            return;
-        }
-        $.each(data, function(index, element) {
-            var dueDateRaw = element.due_date;
-            var dueDateParts = dueDateRaw.split("/");
-            var dueDate = new Date(dueDateParts[2], dueDateParts[0] - 1, dueDateParts[1]);
-            if (currentDate > dueDate && element.how_complete < 1.0) {
-                $("#pastDueHeader").show();
-                $("#pastDue").show();
-                $("#pastDueTable").append("<tr><td>" + element.name + "</td><td>" + element.description + "</td><td>" + element.due_date + "</td><td><span class='completion'>" + element.how_complete + )
-            }
-        })
-    });*/
-
-    var addTaskActive = false;
-    $("#addTaskDropdown").hide();
-    $("#addTaskButton").click(function() {
-        if (!addTaskActive) {
-            $("#addTaskDropdown").show().position({
-                my: "right top",
-                at: "right bottom",
-                of: $("#addTaskButton"),
-                collision: "none"
-            });
-            $("#addTaskButton").text("-");
-            addTaskActive = true;
-        } else {
-            $("#addTaskDropdown").hide();
-            $("#addTaskButton").text("+");
-            addTaskActive = false;
-        }
-    });
-});
-
 var global_task = {
+    id: 0,
     name: "global_task",
     desc: "",
     subtasks: [],
     progress: 0,
+    due: "12/31/3000"
 };
 
 function get_task_from_id(id) {
     var indices = id.split(":");
     var task = global_task;
-    for (var i = 1; i < indices.length; i++) {
+    for (var i = 0; i < indices.length; i++) {
         task = task.subtasks[Number(indices[i])];
     }
 
     return task;
+}
+
+function get_task_from_name(name) {
+    var task = global_task;
+    return recurse_tasks_scan_name(task, name);
+}
+
+function recurse_tasks_scan_name(task, name) {
+    for (var i = 0; i < task.subtasks.length; i++) {
+        var task2 = task.subtasks[i];
+        if (task2.name == name) {
+            return task;
+        }
+        var result = recurse_tasks_scan_name(task2, name);
+        if (result != null) {
+            return result;
+        }
+    }
+    return null;
 }
 
 function get_parent_task_from_id(id) {
@@ -144,7 +119,20 @@ function display_task(task, id) {
 }
 
 function add_task() {
-    var id = document.getElementById("set_parent_task").value;
+    var name = document.getElementById("add_name").value;
+    var desc = document.getElementById("add_desc").value;
+    var parent_id_base = document.getElementById("set_parent_task").value;
+    var due = document.getElementById("date").value;
+    if (Number.isNaN(parent_id_base)) {
+        var parent_id = 0;
+    } else {
+        var parent_id = parent_id_base;
+    }
+    document.getElementById("add_name").value = "";
+    document.getElementById("add_desc").value = "";
+    document.getElementById("set_parent_task").value = "";
+    document.getElementById("date").value = "";
+    /*var id = document.getElementById("set_parent_task").value;
     var task = get_task_from_id(id);
 
     if (task.progress == 100 && task.subtasks.length == 0) {
@@ -156,6 +144,40 @@ function add_task() {
         desc: document.getElementById("add_desc").value,
         subtasks: [],
         progress: 0,
+        due: document.getElementById("date").value
+    });
+
+    update_progress(global_task);
+
+    display_task(global_task, "global_task");*/
+    $.post("action/create_todo.php", {
+        task_name: name,
+        description: desc,
+        due: due,
+        subtask: parent_id
+    }, function(data, status) {
+        if (data.startsWith("dberror")) {
+            $("#errorMsg").text("Database error! Please contact frank@infotoast.org.");
+        } else if (data.startsWith("success")) {
+            var data_split = data.split(",");
+            add_task_data(data_split[1], parent_id, name, desc, due, 0);
+        }
+    });
+}
+
+function add_task_data(server_id, parent_name, name, desc, due, progress = 0) {
+    var task = get_task_from_name(parent_name);
+    if (task.progress == 100 && task.subtasks.length == 0) {
+        task.progress = 0;
+    }
+
+    task.subtasks.push({
+        id: server_id,
+        name: name,
+        desc: desc,
+        subtasks: [],
+        progress: progress,
+        due: due
     });
 
     update_progress(global_task);
@@ -187,3 +209,53 @@ function toggle_completion(parent_id, i) {
 
     display_task(global_task, "global_task");
 }
+
+$(document).ready(function() {
+    /*$("#errorMsg").hide();
+    $("#pastDueHeader").hide();
+    $("#pastDue").hide();
+    $("#currentHeader").hide();
+    $("#current").hide();
+    $("#doneHeader").hide();
+    $("done").hide();
+    const currentDate = new Date();*/
+    var addTaskActive = false;
+    $("#addTaskDropdown").hide();
+    $("#addTaskButton").click(function() {
+        if (!addTaskActive) {
+            $("#addTaskDropdown").show().position({
+                my: "right top",
+                at: "right bottom",
+                of: $("#addTaskButton"),
+                collision: "none"
+            });
+            $("#addTaskButton").text("-");
+            $("#date").datepicker();
+            addTaskActive = true;
+        } else {
+            $("#addTaskDropdown").hide();
+            $("#addTaskButton").text("+");
+            addTaskActive = false;
+        }
+    });
+
+    function get_todos(surtask_id) {
+        $.get("action/list_todos.php?subtask=" + surtask_id, function (data, status) {
+            if (status !== 200) {
+                $("#errorMsg").text("There was an error! Error code: " + data + ". Please email this to frank@infotoast.org.").show();
+                return;
+            }
+            $.each(data, function(index, element) {
+                var dueDateRaw = element.due_date;
+                var dueDateParts = dueDateRaw.split("/");
+                var dueDate = new Date(dueDateParts[2], dueDateParts[0] - 1, dueDateParts[1]);
+                if (element.how_complete < 1.0) {
+                    add_task_data(element.id, "global_task", element.name, element.description, element.due_date, Math.round(Number(element.how_complete)*100));
+                }
+                get_todos(element.id);
+            })
+        });
+    }
+
+    get_todos();
+});

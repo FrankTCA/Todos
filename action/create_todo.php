@@ -40,7 +40,19 @@ $due_date = $due;
 $sql->bind_param('issii', $uid, $taskname, $taskdesc, $st, $comp_meth, $due_date);
 $sql->execute();
 $conn->commit();
-$conn->close();
 
-http_response_code(200);
-echo "success";
+$sql2 = $conn->prepare("SELECT * FROM tasks WHERE user_id = ? AND name LIKE ?;");
+$uid2 = $user_id;
+$task_name = $name;
+$sql2->bind_param('is', $uid2, $task_name);
+$sql2->execute();
+
+if ($result = $sql2->get_result()) {
+    while ($row = $result->fetch_assoc()) {
+        http_response_code(200);
+        $conn->close();
+        echo "success,". $row["id"] . "," . $row["name"] . "," . $row["description"] . "," . $row["created"];
+        die();
+    }
+}
+

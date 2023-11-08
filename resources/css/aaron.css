@@ -5,8 +5,8 @@ body {
 }
 .task {
     padding: 10px;
-    border: 5px solid #d9a2f5;
-    background-color: #190424;
+    border: 1px solid black;
+    background-color: grey;
     color: white;
     min-width: 50%;
     margin: 0;
@@ -14,8 +14,8 @@ body {
 
 .task:hover:not(:has(.task:hover)) { /* Todo: This only works for newer (2023 +) versions of browsers. Implement this another way. */
     padding: 10px;
-    border: 5px solid #d9a2f5;
-    background-color: #361b45;
+    border: 1px solid black;
+    background-color: darkgrey;
     color: white;
     min-width: 50%;
     margin: 0;
