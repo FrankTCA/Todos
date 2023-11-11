@@ -37,7 +37,7 @@ $taskdesc = $description;
 $st = $subtask_of;
 $comp_meth = $completion_method;
 $due_date = $due;
-$sql->bind_param('issii', $uid, $taskname, $taskdesc, $st, $comp_meth, $due_date);
+$sql->bind_param('issiis', $uid, $taskname, $taskdesc, $st, $comp_meth, $due_date);
 $sql->execute();
 $conn->commit();
 
