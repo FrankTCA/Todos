@@ -46,7 +46,14 @@ validate_token("https://infotoast.org/todos/");
                 <input type="button" id="add_task" value="Add" onclick="add_task()"><br>
             </div>
         </div>
-
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
         <ul id="global_task_subtasks" class="task_list">
         </ul>
         <p class="errorMsg" id="errorMsg"></p>

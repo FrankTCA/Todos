@@ -24,9 +24,14 @@ $sql->execute();
 
 if ($result = $sql->get_result()) {
     header("Content-Type: application/json");
-    echo '{[';
+    echo '{"tasks":[';
+    $counter = 0;
     while ($row = $result->fetch_assoc()) {
-        echo "{\"id\": " . $row['id'] . ", \"name\": " . $row["name"] . ", \"description\":" . $row["description"] . ", \"completion_method\":" . $row["completion_method"] . ", \"how_complete\":" . $row["how_complete"] . ", \"due_date\":" . $row["due_date"] . ", \"created\":" . $row["created"] . "},";
+        echo "{\"id\": " . $row['id'] . ", \"name\": \"" . $row["name"] . "\", \"description\":\"" . $row["description"] . "\", \"completion_method\":" . $row["completion_method"] . ", \"how_complete\":" . $row["how_complete"] . ", \"due_date\":\"" . $row["due_date"] . "\", \"created\":\"" . $row["created"] . "\"}";
+        $counter++;
+        if ($counter < $result->num_rows) {
+            echo ",";
+        }
     }
     echo "]}";
 }

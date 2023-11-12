@@ -306,23 +306,30 @@ $(document).ready(function() {
         }
     });
 
+    console.log("Logging!");
+
     function get_todos(surtask_id) {
-        $.get("action/list_todos.php?subtask=" + surtask_id, function (data, status) {
-            if (status !== 200) {
-                $("#errorMsg").text("There was an error! Error code: " + data + ". Please email this to frank@infotoast.org.").show();
-                return;
-            }
-            $.each(data, function(index, element) {
+        console.log("Getting todo list!");
+        const req = new XMLHttpRequest();
+        req.addEventListener("load", function() {
+            data = this.responseText;
+            console.log("Running success function.");
+            console.log(data);
+            let jsonData = JSON.parse(data);
+            for (var i = 0; i < jsonData.tasks.length; i++) {
+                var element = jsonData.tasks[i];
+                console.log(element);
                 var dueDateRaw = element.due_date;
                 var dueDateParts = dueDateRaw.split("/");
                 var dueDate = new Date(dueDateParts[2], dueDateParts[0] - 1, dueDateParts[1]);
                 if (element.how_complete < 1.0) {
-                    add_task_data(element.id, "global_task", element.name, element.description, element.due_date, Math.round(Number(element.how_complete)*100));
+                    print_task(element.id, element.name, element.description, element.due_date, Math.round(Number(element.how_complete)*100), surtask_id);
                 }
-                get_todos(element.id);
-            })
+            }
         });
+        req.open("GET", "action/list_todos.php?subtask=" + surtask_id);
+        req.send();
     }
 
-    get_todos();
+    get_todos(0);
 });
