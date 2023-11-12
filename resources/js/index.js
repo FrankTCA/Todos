@@ -146,6 +146,7 @@ function add_task() {
         var parent_id = 0;
     } else {
         var parent_id = parent_id_base;
+        get_subtasks(parent_id);
     }
     document.getElementById("add_name").value = "";
     document.getElementById("add_desc").value = "";
@@ -236,8 +237,8 @@ function toggle_completion(parent_id, i) {
 
 function print_task(id, name, description, due_date, progress, subtask_of_id) {
     if (subtask_of_id == 0) {
-        $("#global_task_subtasks").append("<div class='task' id='task_'" + String(id) + "><li>" +
-            + "<button onclick='complete_task(" + String(id) + ")' class='taskbtn'>✅</button>"
+        $("#global_task_subtasks").append("<div class='task' id='task_" + String(id) + "'><li>"
+            + "<button onclick='complete_task(" + id + ")' class='taskbtn'>✅</button>"
             + "<div class='tasknameDesc'><span class='taskName'>" + name + "</span><br>" + "<span class='taskDesc'>" + description + "</span></div>"
             + "<span class='dueDate'>" + due_date + "</span>"
             + "<div id='progressBar_" + String(id) + "'></div>"
@@ -256,25 +257,101 @@ function print_task(id, name, description, due_date, progress, subtask_of_id) {
             '<line fill="#FFFFFF" stroke="#000000" stroke-width="3" stroke-miterlimit="10" x1="34.3" y1="112.1" x2="105.5" y2="112.1"/>\n' +
             '<line fill="#FFFFFF" stroke="#000000" stroke-width="3" stroke-miterlimit="10" x1="34.3" y1="119.5" x2="116.7" y2="119.5"/>\n' +
             '</svg>'
-            + "</button></div></li></div>"
+            + "</button><button class='taskbtn' onclick='create_subtask(" + id + ")'><svg version=\"1.1\" length=\"10px\" width=\"10px\" id=\"Layer_1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" x=\"0px\" y=\"0px\"\n" +
+            "\t viewBox=\"0 0 128 128\" enable-background=\"new 0 0 128 128\" xml:space=\"preserve\">\n" +
+            "<line fill=\"#FFFFFF\" stroke=\"#000000\" stroke-width=\"10\" stroke-miterlimit=\"10\" x1=\"64\" y1=\"5.9\" x2=\"63\" y2=\"73\"/>\n" +
+            "<line fill=\"#FFFFFF\" stroke=\"#000000\" stroke-width=\"10\" stroke-miterlimit=\"10\" x1=\"33.5\" y1=\"39.5\" x2=\"96.4\" y2=\"39.5\"/>\n" +
+            "<polyline fill=\"#FFFFFF\" stroke=\"#000000\" stroke-width=\"10\" stroke-miterlimit=\"10\" points=\"24,82 63,117.1 100.2,82 \"/>\n" +
+            "</svg>\n"
+            + "</button></div></li></div><div class='task_list' id='" + String(id) + "_subtasks'></div>"
         );
         $("#progressBar_" + String(id)).progressbar({
             value: progress
         });
-        $("#global_task_subtasks").append("<div class='task_list id='" + String("id") + "_subtasks");
+        $("#" + id + "_subtasks").hide();
+    } else {
+        $("#" + subtask_of_id + "_subtasks").append("<div class='task' style='margin-left: 2em' id='task_" + String(id) + "'><li>"
+            + "<button onclick='complete_task(" + id + ")' class='taskbtn'>✅</button>"
+            + "<div class='tasknameDesc'><span class='taskName'>" + name + "</span><br>" + "<span class='taskDesc'>" + description + "</span></div>"
+            + "<span class='dueDate'>" + due_date + "</span>"
+            + "<div id='progressBar_" + String(id) + "'></div>"
+            + "<div class='controlButtons'><button onclick='delete_task(" + String(id) + ")' class='taskbtn'>🗑️</button>"
+            + "<button onclick='get_subtasks(" + String(id) + ")' class='taskButton'>"
+            + '<svg version="1.1" id="Layer_1" width="10px" height="10px" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"\n' +
+            '\t viewBox="0 0 128 128" enable-background="new 0 0 128 128" xml:space="preserve">\n' +
+            '<polyline fill="#FFFFFF" stroke="#000000" stroke-width="30" stroke-miterlimit="10" points="13,13 64,48.6 114.2,13 "/>\n' +
+            '<polyline fill="#FFFFFF" stroke="#000000" stroke-width="3" stroke-miterlimit="10" points="10.5,78.5 14.5,82.5 22.5,74.5 "/>\n' +
+            '<line fill="#FFFFFF" stroke="#000000" stroke-width="3" stroke-miterlimit="10" x1="33.5" y1="76.5" x2="104.7" y2="76.5"/>\n' +
+            '<line fill="#FFFFFF" stroke="#000000" stroke-width="3" stroke-miterlimit="10" x1="33.5" y1="83.8" x2="115.9" y2="83.8"/>\n' +
+            '<polyline fill="#FFFFFF" stroke="#000000" stroke-width="3" stroke-miterlimit="10" points="11.4,96.9 15.4,100.9 23.4,92.9 "/>\n' +
+            '<line fill="#FFFFFF" stroke="#000000" stroke-width="3" stroke-miterlimit="10" x1="34.4" y1="94.9" x2="105.6" y2="94.9"/>\n' +
+            '<line fill="#FFFFFF" stroke="#000000" stroke-width="3" stroke-miterlimit="10" x1="34.4" y1="102.2" x2="116.8" y2="102.2"/>\n' +
+            '<circle stroke="#000000" stroke-width="3" stroke-miterlimit="10" cx="16.5" cy="116.5" r="5"/>\n' +
+            '<line fill="#FFFFFF" stroke="#000000" stroke-width="3" stroke-miterlimit="10" x1="34.3" y1="112.1" x2="105.5" y2="112.1"/>\n' +
+            '<line fill="#FFFFFF" stroke="#000000" stroke-width="3" stroke-miterlimit="10" x1="34.3" y1="119.5" x2="116.7" y2="119.5"/>\n' +
+            '</svg>'
+        + "</button><button class='taskbtn' onclick='create_subtask(" + id + ")'><svg version=\"1.1\" length=\"10px\" width=\"10px\" id=\"Layer_1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" x=\"0px\" y=\"0px\"\n" +
+            "\t viewBox=\"0 0 128 128\" enable-background=\"new 0 0 128 128\" xml:space=\"preserve\">\n" +
+            "<line fill=\"#FFFFFF\" stroke=\"#000000\" stroke-width=\"10\" stroke-miterlimit=\"10\" x1=\"64\" y1=\"5.9\" x2=\"63\" y2=\"73\"/>\n" +
+            "<line fill=\"#FFFFFF\" stroke=\"#000000\" stroke-width=\"10\" stroke-miterlimit=\"10\" x1=\"33.5\" y1=\"39.5\" x2=\"96.4\" y2=\"39.5\"/>\n" +
+            "<polyline fill=\"#FFFFFF\" stroke=\"#000000\" stroke-width=\"10\" stroke-miterlimit=\"10\" points=\"24,82 63,117.1 100.2,82 \"/>\n" +
+            "</svg>\n"
+            + "</button></div></li></div><div class='task_list' id='" + String(id) + "_subtasks'></div>"
+        );
     }
 }
 
 function complete_task(id) {
+    console.log("Marked as completed!");
+    const compReq = new XMLHttpRequest();
+    compReq.addEventListener("load", function() {
+        var data = this.responseText;
+        if (data.startsWith("success")) {
+            $("#task_" + id).hide();
+            $("#" + id + "_subtasks").hide();
+        } else {
+            $("#errorMsg").text(data);
+        }
+    });
+    compReq.open("GET", "action/complete.php?id=" + id);
+    compReq.send();
+}
 
+function get_todos(surtask_id) {
+    console.log("Getting todo list!");
+    const req = new XMLHttpRequest();
+    req.addEventListener("load", function() {
+        data = this.responseText;
+        console.log("Running success function.");
+        console.log(data);
+        let jsonData = JSON.parse(data);
+        for (var i = 0; i < jsonData.tasks.length; i++) {
+            var element = jsonData.tasks[i];
+            console.log(element);
+            var dueDateRaw = element.due_date;
+            var dueDateParts = dueDateRaw.split("/");
+            var dueDate = new Date(dueDateParts[2], dueDateParts[0] - 1, dueDateParts[1]);
+            if (element.how_complete < 1.0) {
+                print_task(element.id, element.name, element.description, element.due_date, Math.round(Number(element.how_complete)*100), surtask_id);
+            }
+        }
+    });
+    req.open("GET", "action/list_todos.php?subtask=" + surtask_id);
+    req.send();
 }
 
 function get_subtasks(id) {
-
+    get_todos(id);
+    $("#" + id + "_subtasks").show();
 }
 
 function delete_task(id) {
 
+}
+
+function create_subtask(id) {
+    $("#set_parent_task").val(String(id));
+    $("#addTaskButton").click();
 }
 
 $(document).ready(function() {
@@ -300,6 +377,7 @@ $(document).ready(function() {
             $("#date").datepicker();
             addTaskActive = true;
         } else {
+            $("#set_parent_task").val("");
             $("#addTaskDropdown").hide();
             $("#addTaskButton").text("+");
             addTaskActive = false;
@@ -307,29 +385,6 @@ $(document).ready(function() {
     });
 
     console.log("Logging!");
-
-    function get_todos(surtask_id) {
-        console.log("Getting todo list!");
-        const req = new XMLHttpRequest();
-        req.addEventListener("load", function() {
-            data = this.responseText;
-            console.log("Running success function.");
-            console.log(data);
-            let jsonData = JSON.parse(data);
-            for (var i = 0; i < jsonData.tasks.length; i++) {
-                var element = jsonData.tasks[i];
-                console.log(element);
-                var dueDateRaw = element.due_date;
-                var dueDateParts = dueDateRaw.split("/");
-                var dueDate = new Date(dueDateParts[2], dueDateParts[0] - 1, dueDateParts[1]);
-                if (element.how_complete < 1.0) {
-                    print_task(element.id, element.name, element.description, element.due_date, Math.round(Number(element.how_complete)*100), surtask_id);
-                }
-            }
-        });
-        req.open("GET", "action/list_todos.php?subtask=" + surtask_id);
-        req.send();
-    }
 
     get_todos(0);
 });
