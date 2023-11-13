@@ -247,64 +247,49 @@ function print_task(id, name, description, due_date, progress, subtask_of_id) {
     if (get_task_from_id(id) != null) {
         return;
     }
+
+    const toAppend = "<div class='task' id='task_" + String(id) + "'><li>"
+        + "<div class='taskSeperator'><button onclick='complete_task(" + id + ")' class='taskbtn'>✅</button></div>"
+        + "<div class='tasknameDesc taskSeperator'><span class='taskName'>" + name + "</span><br><br>" + "<span class='taskDesc'>" + description + "</span></div>"
+        + "<div class='taskSeperator'><span class='dueDate'>" + due_date + "</span></div>"
+        +  "<div class='controlButtons taskSeperator'><button onclick='delete_task(" + String(id) + ")' class='taskbtn'>🗑️</button>"
+        + "<button onclick='subtasks_click(" + String(id) + ")' class='taskbtn'>"
+        + '<svg version="1.1" id="Layer_1" width="10px" height="10px" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"\n' +
+        '\t viewBox="0 0 128 128" enable-background="new 0 0 128 128" xml:space="preserve">\n' +
+        '<polyline fill="#FFFFFF" stroke="#000000" stroke-width="30" stroke-miterlimit="10" points="13,13 64,48.6 114.2,13 "/>\n' +
+        '<polyline fill="#FFFFFF" stroke="#000000" stroke-width="3" stroke-miterlimit="10" points="10.5,78.5 14.5,82.5 22.5,74.5 "/>\n' +
+        '<line fill="#FFFFFF" stroke="#000000" stroke-width="3" stroke-miterlimit="10" x1="33.5" y1="76.5" x2="104.7" y2="76.5"/>\n' +
+        '<line fill="#FFFFFF" stroke="#000000" stroke-width="3" stroke-miterlimit="10" x1="33.5" y1="83.8" x2="115.9" y2="83.8"/>\n' +
+        '<polyline fill="#FFFFFF" stroke="#000000" stroke-width="3" stroke-miterlimit="10" points="11.4,96.9 15.4,100.9 23.4,92.9 "/>\n' +
+        '<line fill="#FFFFFF" stroke="#000000" stroke-width="3" stroke-miterlimit="10" x1="34.4" y1="94.9" x2="105.6" y2="94.9"/>\n' +
+        '<line fill="#FFFFFF" stroke="#000000" stroke-width="3" stroke-miterlimit="10" x1="34.4" y1="102.2" x2="116.8" y2="102.2"/>\n' +
+        '<circle stroke="#000000" stroke-width="3" stroke-miterlimit="10" cx="16.5" cy="116.5" r="5"/>\n' +
+        '<line fill="#FFFFFF" stroke="#000000" stroke-width="3" stroke-miterlimit="10" x1="34.3" y1="112.1" x2="105.5" y2="112.1"/>\n' +
+        '<line fill="#FFFFFF" stroke="#000000" stroke-width="3" stroke-miterlimit="10" x1="34.3" y1="119.5" x2="116.7" y2="119.5"/>\n' +
+        '</svg>'
+        + "</button><button class='taskbtn' onclick='create_subtask(" + id + ")'><svg version=\"1.1\" length=\"10px\" width=\"10px\" id=\"Layer_1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" x=\"0px\" y=\"0px\"\n" +
+        "\t viewBox=\"0 0 128 128\" enable-background=\"new 0 0 128 128\" xml:space=\"preserve\">\n" +
+        "<line fill=\"#FFFFFF\" stroke=\"#000000\" stroke-width=\"10\" stroke-miterlimit=\"10\" x1=\"64\" y1=\"5.9\" x2=\"63\" y2=\"73\"/>\n" +
+        "<line fill=\"#FFFFFF\" stroke=\"#000000\" stroke-width=\"10\" stroke-miterlimit=\"10\" x1=\"33.5\" y1=\"39.5\" x2=\"96.4\" y2=\"39.5\"/>\n" +
+        "<polyline fill=\"#FFFFFF\" stroke=\"#000000\" stroke-width=\"10\" stroke-miterlimit=\"10\" points=\"24,82 63,117.1 100.2,82 \"/>\n" +
+        "</svg>\n"
+        + "</button></div><div id='progressBar_" + String(id) + "'></div></li></div>"
+        + "<div class='task_list' style='margin-left: 2em' id='" + String(id) + "_subtasks'></div>"
     if (subtask_of_id == 0) {
-        $("#global_task_subtasks").append("<div class='task' id='task_" + String(id) + "'><li>"
-            + "<button onclick='complete_task(" + id + ")' class='taskbtn'>✅</button>"
-            + "<div class='tasknameDesc'><span class='taskName'>" + name + "</span><br>" + "<span class='taskDesc'>" + description + "</span></div>"
-            + "<span class='dueDate'>" + due_date + "</span>"
-            + "<div id='progressBar_" + String(id) + "'></div>"
-            + "<div class='controlButtons'><button onclick='delete_task(" + String(id) + ")' class='taskbtn'>🗑️</button>"
-            + "<button onclick='subtasks_click(" + String(id) + ")' class='taskButton'>"
-            + '<svg version="1.1" id="Layer_1" width="10px" height="10px" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"\n' +
-            '\t viewBox="0 0 128 128" enable-background="new 0 0 128 128" xml:space="preserve">\n' +
-            '<polyline fill="#FFFFFF" stroke="#000000" stroke-width="30" stroke-miterlimit="10" points="13,13 64,48.6 114.2,13 "/>\n' +
-            '<polyline fill="#FFFFFF" stroke="#000000" stroke-width="3" stroke-miterlimit="10" points="10.5,78.5 14.5,82.5 22.5,74.5 "/>\n' +
-            '<line fill="#FFFFFF" stroke="#000000" stroke-width="3" stroke-miterlimit="10" x1="33.5" y1="76.5" x2="104.7" y2="76.5"/>\n' +
-            '<line fill="#FFFFFF" stroke="#000000" stroke-width="3" stroke-miterlimit="10" x1="33.5" y1="83.8" x2="115.9" y2="83.8"/>\n' +
-            '<polyline fill="#FFFFFF" stroke="#000000" stroke-width="3" stroke-miterlimit="10" points="11.4,96.9 15.4,100.9 23.4,92.9 "/>\n' +
-            '<line fill="#FFFFFF" stroke="#000000" stroke-width="3" stroke-miterlimit="10" x1="34.4" y1="94.9" x2="105.6" y2="94.9"/>\n' +
-            '<line fill="#FFFFFF" stroke="#000000" stroke-width="3" stroke-miterlimit="10" x1="34.4" y1="102.2" x2="116.8" y2="102.2"/>\n' +
-            '<circle stroke="#000000" stroke-width="3" stroke-miterlimit="10" cx="16.5" cy="116.5" r="5"/>\n' +
-            '<line fill="#FFFFFF" stroke="#000000" stroke-width="3" stroke-miterlimit="10" x1="34.3" y1="112.1" x2="105.5" y2="112.1"/>\n' +
-            '<line fill="#FFFFFF" stroke="#000000" stroke-width="3" stroke-miterlimit="10" x1="34.3" y1="119.5" x2="116.7" y2="119.5"/>\n' +
-            '</svg>'
-            + "</button><button class='taskbtn' onclick='create_subtask(" + id + ")'><svg version=\"1.1\" length=\"10px\" width=\"10px\" id=\"Layer_1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" x=\"0px\" y=\"0px\"\n" +
-            "\t viewBox=\"0 0 128 128\" enable-background=\"new 0 0 128 128\" xml:space=\"preserve\">\n" +
-            "<line fill=\"#FFFFFF\" stroke=\"#000000\" stroke-width=\"10\" stroke-miterlimit=\"10\" x1=\"64\" y1=\"5.9\" x2=\"63\" y2=\"73\"/>\n" +
-            "<line fill=\"#FFFFFF\" stroke=\"#000000\" stroke-width=\"10\" stroke-miterlimit=\"10\" x1=\"33.5\" y1=\"39.5\" x2=\"96.4\" y2=\"39.5\"/>\n" +
-            "<polyline fill=\"#FFFFFF\" stroke=\"#000000\" stroke-width=\"10\" stroke-miterlimit=\"10\" points=\"24,82 63,117.1 100.2,82 \"/>\n" +
-            "</svg>\n"
-            + "</button></div></li></div><div class='task_list' style='margin-left: 2em' id='" + String(id) + "_subtasks'></div>"
-        );
+        $("#global_task_subtasks").append(toAppend);
         $("#progressBar_" + String(id)).progressbar({
             value: progress
         });
         $("#" + id + "_subtasks").hide();
     } else {
-        $("#" + subtask_of_id + "_subtasks").append(`<div class='task' id='task_${String(id)}'><li><button onclick='complete_task(${id})' class='taskbtn'>✅</button><div class='tasknameDesc'><span class='taskName'>${name}</span><br><span class='taskDesc'>${description}</span></div><span class='dueDate'>${due_date}</span><div id='progressBar_${String(id)}'></div><div class='controlButtons'><button onclick='delete_task(${String(id)})' class='taskbtn'>🗑️</button><button onclick='subtasks_click(${String(id)})' class='taskButton'><svg version="1.1" id="Layer_1" width="10px" height="10px" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-\t viewBox="0 0 128 128" enable-background="new 0 0 128 128" xml:space="preserve">
-<polyline fill="#FFFFFF" stroke="#000000" stroke-width="30" stroke-miterlimit="10" points="13,13 64,48.6 114.2,13 "/>
-<polyline fill="#FFFFFF" stroke="#000000" stroke-width="3" stroke-miterlimit="10" points="10.5,78.5 14.5,82.5 22.5,74.5 "/>
-<line fill="#FFFFFF" stroke="#000000" stroke-width="3" stroke-miterlimit="10" x1="33.5" y1="76.5" x2="104.7" y2="76.5"/>
-<line fill="#FFFFFF" stroke="#000000" stroke-width="3" stroke-miterlimit="10" x1="33.5" y1="83.8" x2="115.9" y2="83.8"/>
-<polyline fill="#FFFFFF" stroke="#000000" stroke-width="3" stroke-miterlimit="10" points="11.4,96.9 15.4,100.9 23.4,92.9 "/>
-<line fill="#FFFFFF" stroke="#000000" stroke-width="3" stroke-miterlimit="10" x1="34.4" y1="94.9" x2="105.6" y2="94.9"/>
-<line fill="#FFFFFF" stroke="#000000" stroke-width="3" stroke-miterlimit="10" x1="34.4" y1="102.2" x2="116.8" y2="102.2"/>
-<circle stroke="#000000" stroke-width="3" stroke-miterlimit="10" cx="16.5" cy="116.5" r="5"/>
-<line fill="#FFFFFF" stroke="#000000" stroke-width="3" stroke-miterlimit="10" x1="34.3" y1="112.1" x2="105.5" y2="112.1"/>
-<line fill="#FFFFFF" stroke="#000000" stroke-width="3" stroke-miterlimit="10" x1="34.3" y1="119.5" x2="116.7" y2="119.5"/>
-</svg></button><button class='taskbtn' onclick='create_subtask(${id})'><svg version="1.1" length="10px" width="10px" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-\t viewBox="0 0 128 128" enable-background="new 0 0 128 128" xml:space="preserve">
-<line fill="#FFFFFF" stroke="#000000" stroke-width="10" stroke-miterlimit="10" x1="64" y1="5.9" x2="63" y2="73"/>
-<line fill="#FFFFFF" stroke="#000000" stroke-width="10" stroke-miterlimit="10" x1="33.5" y1="39.5" x2="96.4" y2="39.5"/>
-<polyline fill="#FFFFFF" stroke="#000000" stroke-width="10" stroke-miterlimit="10" points="24,82 63,117.1 100.2,82 "/>
-</svg>
-</button></div></li></div><div class='task_list' style='margin-left: 2em' id='${String(id)}_subtasks'></div>`
-        );
+        $("#" + subtask_of_id + "_subtasks").append(toAppend);
         $("#progressBar_" + String(id)).progressbar({
             value: progress
         });
         $("#" + id + "_subtasks").hide();
+    }
+    if (new Date().getDay() > new Date(due_date).getDay()) {
+        $("#task_" + id).css("color", "red");
     }
     open_tasks.push({
         id: id,

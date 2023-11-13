@@ -12,6 +12,63 @@ body {
     margin: 0;
 }
 
+.overdueTask {
+    color: red;
+}
+
+.task .taskNameDesc {
+    display: inline-block;
+    margin: 1em;
+}
+
+.dueDate {
+    text-align: center;
+    vertical-align: middle;
+    line-height: normal;
+}
+
+.task button {
+    display: inline-block;
+}
+
+.task .controlButtons {
+    display: inline-block;
+}
+
+.taskSeperator {
+    display: inline-block;
+    padding-right: 3em;
+}
+
+.taskbtn {
+    display: inline-block;
+    padding: 0.5em 1em 0.5em 1em;
+    margin-right: 0.5em;
+    margin-bottom: 2em;
+    vertical-align: middle;
+    border: 1px solid cornflowerblue;
+    background-color: white;
+    box-shadow: black 1px 1px;
+}
+
+.taskName {
+    text-transform: uppercase;
+    font-size: xx-large;
+}
+
+.taskDesc {
+    margin-top: 3em;
+    margin-left: 1em;
+}
+
+.task button:hover {
+    background-color: cornflowerblue;
+}
+
+.task button:active {
+    box-shadow: black 0 0;
+}
+
 .task:hover:not(:has(.task:hover)) { /* Todo: This only works for newer (2023 +) versions of browsers. Implement this another way. */
     padding: 10px;
     border: 1px solid black;
