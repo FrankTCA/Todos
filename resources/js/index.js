@@ -7,66 +7,51 @@ var global_task = {
     due: "12/31/3000"
 };
 
+var open_subtasks = [];
+
+var open_tasks = [];
+
 function get_task_from_id(id) {
-    var indices = id.split(":");
-    var task = global_task;
-    for (var i = 0; i < indices.length; i++) {
-        task = task.subtasks[Number(indices[i])];
-    }
-
-    return task;
-}
-
-function get_task_from_name(name) {
-    var task = global_task;
-    return recurse_tasks_scan_name(task, name);
-}
-
-function recurse_tasks_scan_name(task, name) {
-    for (var i = 0; i < task.subtasks.length; i++) {
-        var task2 = task.subtasks[i];
-        if (task2.name == name) {
-            return task2;
-        }
-        var result = recurse_tasks_scan_name(task2, name);
-        if (result != null) {
-            return result;
+    for (var i = 0; i < open_tasks.length; i++) {
+        if (open_tasks[i].id == id) {
+            return open_tasks[i];
         }
     }
     return null;
 }
 
-function get_task_from_srv_id(id) {
-    var task = global_task;
-    return recurse_tasks_scan_srv_id(task, id);
-}
-
-function recurse_tasks_scan_srv_id(task, id) {
-    for (var i = 0; i < task.subtasks.length; i++) {
-        var task2 = task.subtasks[i];
-        if (task2.id == id) {
-            return task2;
-        }
-        var result = recurse_tasks_scan_srv_id(task, id);
-        if (result != null) {
-            return result;
+function get_task_list_from_name(name) {
+    var taskList = [];
+    for (var i = 0; i < open_tasks.length; i++) {
+        if (open_tasks[i].name = name) {
+            taskList.push(open_tasks[i]);
         }
     }
-    return null;
+    return taskList;
 }
 
 function get_parent_task_from_id(id) {
-    var indices = id.split(":");
-    var task = global_task;
-    for (var i = 1; i < indices.length - 1; i++) {
-        task = task.subtasks[Number(indices[i])];
-    }
+    var task = get_task_from_id(id);
+    var parentId = task.parent;
+    return get_task_from_id(parentId);
+}
 
-    if (task == global_task) {
-        return -1;
+function get_child_tasks(id) {
+    var taskList = [];
+    for (var i = 0; i < open_tasks.length; i++) {
+        if (open_tasks[i].parent == id) {
+            taskList.push(open_tasks[i]);
+        }
     }
+    return taskList;
+}
 
-    return task;
+function remove_from_open_tasks(id) {
+    for (var i = 0; i < open_tasks.length; i++) {
+        if (open_tasks[i].id == id) {
+            open_tasks.splice(i, 1);
+        }
+    }
 }
 
 function display_task(task, id) {
@@ -170,6 +155,7 @@ function add_task() {
     update_progress(global_task);
 
     display_task(global_task, "global_task");*/
+    $("#addTaskButton").click();
     $.post("action/create_todo.php", {
         task_name: name,
         description: desc,
@@ -227,6 +213,28 @@ function update_progress(task) {
     }
 }
 
+function refresh_progress(id) {
+    const progReq = new XMLHttpRequest();
+    var progress = 0;
+    progReq.addEventListener("load", function() {
+        var data = this.responseText;
+        if (data.startsWith("success")) {
+            let splitData = data.split(",")
+            progress = Number(splitData[1])*100;
+            if (progress == 100) {
+                $("#task_" + id).hide();
+                $("#" + id + "_subtasks").hide();
+            } else {
+                $("#progressBar_" + id).progressbar({
+                    value: progress
+                });
+            }
+        }
+    });
+    progReq.open("GET", "action/progress.php?id=" + id, false);
+    progReq.send();
+}
+
 function toggle_completion(parent_id, i) {
     var task = get_task_from_id(parent_id);
     task.subtasks[i].progress = 100 - task.subtasks[i].progress;
@@ -236,6 +244,9 @@ function toggle_completion(parent_id, i) {
 }
 
 function print_task(id, name, description, due_date, progress, subtask_of_id) {
+    if (get_task_from_id(id) != null) {
+        return;
+    }
     if (subtask_of_id == 0) {
         $("#global_task_subtasks").append("<div class='task' id='task_" + String(id) + "'><li>"
             + "<button onclick='complete_task(" + id + ")' class='taskbtn'>✅</button>"
@@ -243,7 +254,7 @@ function print_task(id, name, description, due_date, progress, subtask_of_id) {
             + "<span class='dueDate'>" + due_date + "</span>"
             + "<div id='progressBar_" + String(id) + "'></div>"
             + "<div class='controlButtons'><button onclick='delete_task(" + String(id) + ")' class='taskbtn'>🗑️</button>"
-            + "<button onclick='get_subtasks(" + String(id) + ")' class='taskButton'>"
+            + "<button onclick='subtasks_click(" + String(id) + ")' class='taskButton'>"
             + '<svg version="1.1" id="Layer_1" width="10px" height="10px" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"\n' +
             '\t viewBox="0 0 128 128" enable-background="new 0 0 128 128" xml:space="preserve">\n' +
             '<polyline fill="#FFFFFF" stroke="#000000" stroke-width="30" stroke-miterlimit="10" points="13,13 64,48.6 114.2,13 "/>\n' +
@@ -263,42 +274,47 @@ function print_task(id, name, description, due_date, progress, subtask_of_id) {
             "<line fill=\"#FFFFFF\" stroke=\"#000000\" stroke-width=\"10\" stroke-miterlimit=\"10\" x1=\"33.5\" y1=\"39.5\" x2=\"96.4\" y2=\"39.5\"/>\n" +
             "<polyline fill=\"#FFFFFF\" stroke=\"#000000\" stroke-width=\"10\" stroke-miterlimit=\"10\" points=\"24,82 63,117.1 100.2,82 \"/>\n" +
             "</svg>\n"
-            + "</button></div></li></div><div class='task_list' id='" + String(id) + "_subtasks'></div>"
+            + "</button></div></li></div><div class='task_list' style='margin-left: 2em' id='" + String(id) + "_subtasks'></div>"
         );
         $("#progressBar_" + String(id)).progressbar({
             value: progress
         });
         $("#" + id + "_subtasks").hide();
     } else {
-        $("#" + subtask_of_id + "_subtasks").append("<div class='task' style='margin-left: 2em' id='task_" + String(id) + "'><li>"
-            + "<button onclick='complete_task(" + id + ")' class='taskbtn'>✅</button>"
-            + "<div class='tasknameDesc'><span class='taskName'>" + name + "</span><br>" + "<span class='taskDesc'>" + description + "</span></div>"
-            + "<span class='dueDate'>" + due_date + "</span>"
-            + "<div id='progressBar_" + String(id) + "'></div>"
-            + "<div class='controlButtons'><button onclick='delete_task(" + String(id) + ")' class='taskbtn'>🗑️</button>"
-            + "<button onclick='get_subtasks(" + String(id) + ")' class='taskButton'>"
-            + '<svg version="1.1" id="Layer_1" width="10px" height="10px" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"\n' +
-            '\t viewBox="0 0 128 128" enable-background="new 0 0 128 128" xml:space="preserve">\n' +
-            '<polyline fill="#FFFFFF" stroke="#000000" stroke-width="30" stroke-miterlimit="10" points="13,13 64,48.6 114.2,13 "/>\n' +
-            '<polyline fill="#FFFFFF" stroke="#000000" stroke-width="3" stroke-miterlimit="10" points="10.5,78.5 14.5,82.5 22.5,74.5 "/>\n' +
-            '<line fill="#FFFFFF" stroke="#000000" stroke-width="3" stroke-miterlimit="10" x1="33.5" y1="76.5" x2="104.7" y2="76.5"/>\n' +
-            '<line fill="#FFFFFF" stroke="#000000" stroke-width="3" stroke-miterlimit="10" x1="33.5" y1="83.8" x2="115.9" y2="83.8"/>\n' +
-            '<polyline fill="#FFFFFF" stroke="#000000" stroke-width="3" stroke-miterlimit="10" points="11.4,96.9 15.4,100.9 23.4,92.9 "/>\n' +
-            '<line fill="#FFFFFF" stroke="#000000" stroke-width="3" stroke-miterlimit="10" x1="34.4" y1="94.9" x2="105.6" y2="94.9"/>\n' +
-            '<line fill="#FFFFFF" stroke="#000000" stroke-width="3" stroke-miterlimit="10" x1="34.4" y1="102.2" x2="116.8" y2="102.2"/>\n' +
-            '<circle stroke="#000000" stroke-width="3" stroke-miterlimit="10" cx="16.5" cy="116.5" r="5"/>\n' +
-            '<line fill="#FFFFFF" stroke="#000000" stroke-width="3" stroke-miterlimit="10" x1="34.3" y1="112.1" x2="105.5" y2="112.1"/>\n' +
-            '<line fill="#FFFFFF" stroke="#000000" stroke-width="3" stroke-miterlimit="10" x1="34.3" y1="119.5" x2="116.7" y2="119.5"/>\n' +
-            '</svg>'
-        + "</button><button class='taskbtn' onclick='create_subtask(" + id + ")'><svg version=\"1.1\" length=\"10px\" width=\"10px\" id=\"Layer_1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" x=\"0px\" y=\"0px\"\n" +
-            "\t viewBox=\"0 0 128 128\" enable-background=\"new 0 0 128 128\" xml:space=\"preserve\">\n" +
-            "<line fill=\"#FFFFFF\" stroke=\"#000000\" stroke-width=\"10\" stroke-miterlimit=\"10\" x1=\"64\" y1=\"5.9\" x2=\"63\" y2=\"73\"/>\n" +
-            "<line fill=\"#FFFFFF\" stroke=\"#000000\" stroke-width=\"10\" stroke-miterlimit=\"10\" x1=\"33.5\" y1=\"39.5\" x2=\"96.4\" y2=\"39.5\"/>\n" +
-            "<polyline fill=\"#FFFFFF\" stroke=\"#000000\" stroke-width=\"10\" stroke-miterlimit=\"10\" points=\"24,82 63,117.1 100.2,82 \"/>\n" +
-            "</svg>\n"
-            + "</button></div></li></div><div class='task_list' id='" + String(id) + "_subtasks'></div>"
+        $("#" + subtask_of_id + "_subtasks").append(`<div class='task' id='task_${String(id)}'><li><button onclick='complete_task(${id})' class='taskbtn'>✅</button><div class='tasknameDesc'><span class='taskName'>${name}</span><br><span class='taskDesc'>${description}</span></div><span class='dueDate'>${due_date}</span><div id='progressBar_${String(id)}'></div><div class='controlButtons'><button onclick='delete_task(${String(id)})' class='taskbtn'>🗑️</button><button onclick='subtasks_click(${String(id)})' class='taskButton'><svg version="1.1" id="Layer_1" width="10px" height="10px" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+\t viewBox="0 0 128 128" enable-background="new 0 0 128 128" xml:space="preserve">
+<polyline fill="#FFFFFF" stroke="#000000" stroke-width="30" stroke-miterlimit="10" points="13,13 64,48.6 114.2,13 "/>
+<polyline fill="#FFFFFF" stroke="#000000" stroke-width="3" stroke-miterlimit="10" points="10.5,78.5 14.5,82.5 22.5,74.5 "/>
+<line fill="#FFFFFF" stroke="#000000" stroke-width="3" stroke-miterlimit="10" x1="33.5" y1="76.5" x2="104.7" y2="76.5"/>
+<line fill="#FFFFFF" stroke="#000000" stroke-width="3" stroke-miterlimit="10" x1="33.5" y1="83.8" x2="115.9" y2="83.8"/>
+<polyline fill="#FFFFFF" stroke="#000000" stroke-width="3" stroke-miterlimit="10" points="11.4,96.9 15.4,100.9 23.4,92.9 "/>
+<line fill="#FFFFFF" stroke="#000000" stroke-width="3" stroke-miterlimit="10" x1="34.4" y1="94.9" x2="105.6" y2="94.9"/>
+<line fill="#FFFFFF" stroke="#000000" stroke-width="3" stroke-miterlimit="10" x1="34.4" y1="102.2" x2="116.8" y2="102.2"/>
+<circle stroke="#000000" stroke-width="3" stroke-miterlimit="10" cx="16.5" cy="116.5" r="5"/>
+<line fill="#FFFFFF" stroke="#000000" stroke-width="3" stroke-miterlimit="10" x1="34.3" y1="112.1" x2="105.5" y2="112.1"/>
+<line fill="#FFFFFF" stroke="#000000" stroke-width="3" stroke-miterlimit="10" x1="34.3" y1="119.5" x2="116.7" y2="119.5"/>
+</svg></button><button class='taskbtn' onclick='create_subtask(${id})'><svg version="1.1" length="10px" width="10px" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+\t viewBox="0 0 128 128" enable-background="new 0 0 128 128" xml:space="preserve">
+<line fill="#FFFFFF" stroke="#000000" stroke-width="10" stroke-miterlimit="10" x1="64" y1="5.9" x2="63" y2="73"/>
+<line fill="#FFFFFF" stroke="#000000" stroke-width="10" stroke-miterlimit="10" x1="33.5" y1="39.5" x2="96.4" y2="39.5"/>
+<polyline fill="#FFFFFF" stroke="#000000" stroke-width="10" stroke-miterlimit="10" points="24,82 63,117.1 100.2,82 "/>
+</svg>
+</button></div></li></div><div class='task_list' style='margin-left: 2em' id='${String(id)}_subtasks'></div>`
         );
+        $("#progressBar_" + String(id)).progressbar({
+            value: progress
+        });
+        $("#" + id + "_subtasks").hide();
     }
+    open_tasks.push({
+        id: id,
+        name: name,
+        description: description,
+        due_date: due_date,
+        progress: progress,
+        parent: subtask_of_id
+    });
+    recurse_parent_progress(id);
 }
 
 function complete_task(id) {
@@ -315,6 +331,17 @@ function complete_task(id) {
     });
     compReq.open("GET", "action/complete.php?id=" + id);
     compReq.send();
+    recurse_parent_progress(id);
+    remove_from_open_tasks(id);
+}
+
+function recurse_parent_progress(id) {
+    if (id == 0) {
+        return;
+    }
+    refresh_progress(id);
+    var task = get_task_from_id(id);
+    recurse_parent_progress(task.parent);
 }
 
 function get_todos(surtask_id) {
@@ -340,8 +367,33 @@ function get_todos(surtask_id) {
     req.send();
 }
 
+function clear() {
+    $("#global_task_subtasks").innerHTML = "";
+    open_tasks = [];
+}
+
+const destroyFast = container => {
+    const el = document.getElementById(container);
+    while (el.firstChild) el.removeChild(el.firstChild);
+};
+
+function subtasks_click(id) {
+    childList = get_child_tasks(id);
+    var isOpen = false;
+    for (var i = 0; i < childList.length; i++) {
+        isOpen = true;
+        remove_from_open_tasks(childList[i].id);
+    }
+    if (isOpen) {
+        destroyFast(id + "_subtasks");
+        return;
+    }
+    get_subtasks(id);
+}
+
 function get_subtasks(id) {
     get_todos(id);
+    open_subtasks.push(id);
     $("#" + id + "_subtasks").show();
 }
 

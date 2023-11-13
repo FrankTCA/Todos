@@ -1,6 +1,7 @@
 <?php
 require_once "../../sso/common.php";
 require "../creds.php";
+require "common.php";
 validate_token("https://infotoast.org/todos/action/create_todo.php");
 
 if (!(not_null($_POST["task_name"]) && not_null($_POST["description"]))) {
@@ -21,7 +22,7 @@ if (isset($_POST["subtask"])) {
 if (isset($_POST["completion_method"])) {
     $completion_method = $_POST["completion_method"];
 } else {
-    $completion_method = 0;
+    $completion_method = 2;
 }
 
 $conn = mysqli_connect(get_database_host(), get_database_username(), get_database_password(), get_database_db());
@@ -40,6 +41,8 @@ $due_date = $due;
 $sql->bind_param('issiis', $uid, $taskname, $taskdesc, $st, $comp_meth, $due_date);
 $sql->execute();
 $conn->commit();
+
+recurse_surtasks($subtask_of);
 
 $sql2 = $conn->prepare("SELECT * FROM tasks WHERE user_id = ? AND name LIKE ?;");
 $uid2 = $user_id;
