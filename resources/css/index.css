@@ -6,7 +6,7 @@
 .dropdown {
     background-color: whitesmoke;
     width: 40%;
-    height: 50%;
+    height: 60%;
     padding: 1em;
     border-radius: 5px;
     box-shadow: #190424 5px 5px;
@@ -22,6 +22,21 @@
     margin-top: 5em;
     margin-right: 2em;
     box-shadow: black 2px 2px;
+}
+
+#add_task {
+    padding: 0.5em 1em 0.5em 1em;
+    border: 1px solid cornflowerblue;
+    background-color: white;
+    box-shadow: black 1px 1px;
+}
+
+#add_task:hover {
+    background-color: cornflowerblue;
+}
+
+#add_task:active {
+    box-shadow: black 0 0;
 }
 
 #addTaskButton:active {
