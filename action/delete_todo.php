@@ -1,6 +1,7 @@
 <?php
 require_once "../../sso/common.php";
 require "../creds.php";
+require "common.php";
 validate_token("https://infotoast.org/todos/action/delete_todo.php");
 
 if (!not_null($_GET["id"])) {
@@ -23,10 +24,12 @@ $uid = $user_id;
 $sql->bind_param('ii', $uid, $taskid);
 $sql->execute();
 $task_belongs_to_user = false;
+$parent_task = 0;
 
 if ($result = $sql->get_result()) {
     while ($row = $result->fetch_assoc()) {
         $task_belongs_to_user = true;
+        $parent_task = $row["subtask_of"];
     }
 }
 
@@ -40,6 +43,8 @@ $tid = $task_id;
 $sql2->bind_param('i', $tid);
 $sql2->execute();
 $conn->commit();
+
+recurse_surtasks($parent_task);
 
 $conn->close();
 

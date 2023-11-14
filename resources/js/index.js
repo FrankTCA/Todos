@@ -383,7 +383,16 @@ function get_subtasks(id) {
 }
 
 function delete_task(id) {
-
+    const deleteReq = new XMLHttpRequest();
+    deleteReq.addEventListener("load", function() {
+        let data = this.responseText;
+        $("#task_" + id).hide();
+        $("#" + id + "_subtasks").hide();
+    });
+    deleteReq.open("GET", "action/delete_todo.php?id=" + id, false);
+    deleteReq.send();
+    recurse_parent_progress(id);
+    remove_from_open_tasks(id);
 }
 
 function create_subtask(id) {
