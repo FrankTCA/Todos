@@ -1,0 +1,89 @@
+* {
+    margin: 0;
+}
+html, body {
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+}
+.center {
+    position: absolute;
+    margin: auto;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    width: 500px;
+    height: 500px;
+    background-color: #ccc;
+    border-radius: 3px;
+}
+.time {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+}
+
+.dateBox {
+    background-color: whitesmoke;
+    opacity: 0.7;
+    color: black;
+    font-family: interstate, Arial, sans-serif;
+    border-radius: 6px;
+    margin-top: 10px;
+    margin-left: 30px;
+    width: 70%;
+    align: left;
+}
+
+hr {
+    border: 1px solid #f1f1f1;
+    margin-bottom: 25px;
+}
+
+.hello {
+    color: aliceblue;
+    font-size: 3em;
+    font-family: interstate, Arial, sans-serif;
+    text-shadow: 2px 2px #000000;
+    text-transform: capitalize;
+}
+
+.evtName {
+    font-size: 1.5em;
+    opacity: 1;
+    padding-top: 7px;
+    padding-bottom: 35px;
+    padding-left: 15px;
+}
+
+.evtDesc {
+    font-size: 0.8em;
+    opacity: 1;
+    padding-top: 10px;
+    margin-bottom: 30px;
+    padding-left: 15px;
+}
+
+.day {
+    color: aliceblue;
+    font-size: 2em;
+    font-family: interstate, Arial, sans-serif;
+    margin-top: 10px;
+    padding-left: 15px;
+    padding-bottom: 5px;
+    text-transform: uppercase;
+}
+
+#theTime {
+    font-family: interstate, Arial, sans-serif;
+    font-size: 10em;
+    color: aliceblue;
+    text-shadow: 2px 2px #000000;
+}
+#theDate {
+    font-family: interstate, Arial, sans-serif;
+    font-size: 2em;
+    color: aliceblue;
+    text-shadow: 2px 2px #000000;
+}

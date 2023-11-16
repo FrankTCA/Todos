@@ -12,18 +12,6 @@
     box-shadow: #190424 5px 5px;
 }
 
-#addTaskButton {
-    font-family: "Arial Black", sans-serif;
-    font-size: x-large;
-    background-color: aliceblue;
-    border: 2px solid white;
-    display: inline-block;
-    float: right;
-    margin-top: 5em;
-    margin-right: 2em;
-    box-shadow: black 2px 2px;
-}
-
 #add_task {
     padding: 0.5em 1em 0.5em 1em;
     border: 1px solid cornflowerblue;
@@ -39,7 +27,7 @@
     box-shadow: black 0 0;
 }
 
-#addTaskButton:active {
+.globalButton:active {
     box-shadow: black 0px 0px;
 }
 
@@ -71,4 +59,16 @@
 .textBox:focus {
     border:0;
     border-bottom: 3px solid coral;
+}
+
+.globalButton {
+    font-family: "Arial Black", sans-serif;
+    font-size: x-large;
+    background-color: aliceblue;
+    border: 2px solid white;
+    display: inline-block;
+    float: right;
+    margin-top: 5em;
+    margin-right: 2em;
+    box-shadow: black 2px 2px;
 }
