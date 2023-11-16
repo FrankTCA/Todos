@@ -8,7 +8,7 @@ validate_token("https://infotoast.org/todos/");
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
+    <title>To-Do List</title>
     <link rel="stylesheet" type="text/css" href="resources/css/jquery-ui.min.css"/>
     <link rel="stylesheet" type="text/css" href="resources/css/global.css"/>
     <link rel="stylesheet" type="text/css" href="resources/css/aaron.css"/>
@@ -16,6 +16,7 @@ validate_token("https://infotoast.org/todos/");
     <script type="text/javascript" src="resources/js/jquery-3.7.1.min.js"></script>
     <script type="text/javascript" src="resources/js/jquery-ui.min.js"></script>
     <script type="text/javascript" src="resources/js/index.js"></script>
+    <script type="text/javascript" src="resources/js/detect-mobile.js"></script>
 </head>
 <body>
     <div class="top">
