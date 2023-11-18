@@ -288,7 +288,7 @@ function print_task(id, name, description, due_date, progress, subtask_of_id) {
         });
         $("#" + id + "_subtasks").hide();
     }
-    if (new Date().getDay() > new Date(due_date).getDay()) {
+    if (new Date().getDate() > new Date(due_date).getDate()) {
         $("#task_" + id).css("color", "red");
     }
     open_tasks.push({
