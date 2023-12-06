@@ -50,7 +50,7 @@ validate_token("https://infotoast.org/todos/");
                     <div class="dropdown" id="addTaskDropdown">
                         <input type="text" id="add_name" class="textBox" placeholder="Name"><br>
                         <input type="text" id="add_desc" class="textBox" placeholder="Description"><br>
-                        <input type="text" id="date" name="date" class="textBox" placeholder="<?php echo date("m/d/Y"); ?>"><br>
+                        <input type="text" id="date" name="date" class="textBox"><br>
                         <input type="hidden" id="set_parent_task">
                         <input type="button" id="add_task" value="Add" onclick="add_task()"><br>
                     </div>

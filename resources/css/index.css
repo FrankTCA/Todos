@@ -6,7 +6,6 @@
 .dropdown {
     background-color: whitesmoke;
     width: 40%;
-    height: 60%;
     padding: 1em;
     border-radius: 5px;
     box-shadow: #190424 5px 5px;
@@ -52,6 +51,7 @@
     margin-left: 2%;
     padding: 3%;
     width: 70%;
+    display: inline-block;
     transition: 0.3s;
     font-family: "Roboto", sans-serif;
 }
