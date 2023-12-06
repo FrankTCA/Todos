@@ -13,6 +13,7 @@ validate_token("https://infotoast.org/todos/mobile.php");
     <link rel="stylesheet" type="text/css" href="resources/css/global.css"/>
     <link rel="stylesheet" type="text/css" href="resources/css/aaron.css"/>
     <link rel="stylesheet" type="text/css" href="resources/css/index.css"/>
+    <link rel="stylesheet" type="text/css" href="resources/css/mobile.css"/>
     <script type="text/javascript" src="resources/js/jquery-3.7.1.min.js"></script>
     <script type="text/javascript" src="resources/js/jquery-ui.min.js"></script>
     <script type="text/javascript" src="resources/js/mobile.js"></script>

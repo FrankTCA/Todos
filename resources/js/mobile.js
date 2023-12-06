@@ -414,17 +414,18 @@ $(document).ready(function() {
     $("#addTaskDropdown").hide();
     $("#addTaskButton").click(function() {
         if (!addTaskActive) {
-            $("#addTaskDropdown").show().position({
+            $("#addTaskDropdown").show().modal();/*.position({
                 my: "",
                 at: "right bottom",
                 of: $("#addTaskButton"),
                 collision: "none"
-            });
+            });*/
             $("#addTaskButton").text("-");
             $("#date").datepicker();
             addTaskActive = true;
         } else {
             $("#set_parent_task").val("");
+            $("#theBody").show();
             $("#addTaskDropdown").hide();
             $("#addTaskButton").text("+");
             addTaskActive = false;
