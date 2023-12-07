@@ -431,6 +431,8 @@ $(document).ready(function() {
         }
     });
 
+    $("#date").attr("placeholder", moment().format("MM/DD/YYYY"));
+
     console.log("Logging!");
 
     get_todos(0);

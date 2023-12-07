@@ -414,12 +414,7 @@ $(document).ready(function() {
     $("#addTaskDropdown").hide();
     $("#addTaskButton").click(function() {
         if (!addTaskActive) {
-            $("#addTaskDropdown").show().modal();/*.position({
-                my: "",
-                at: "right bottom",
-                of: $("#addTaskButton"),
-                collision: "none"
-            });*/
+            $("#addTaskDropdown").show();
             $("#addTaskButton").text("-");
             $("#date").datepicker();
             addTaskActive = true;
@@ -431,6 +426,8 @@ $(document).ready(function() {
             addTaskActive = false;
         }
     });
+
+    $("#date").attr("placeholder", moment().format("MM/DD/YYYY"));
 
     console.log("Logging!");
 

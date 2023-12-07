@@ -37,7 +37,7 @@ validate_token("https://infotoast.org/todos/mobile.php");
 
 <div class="theBody">
     <div class="addTaskArea">
-        <button class="dropdownparent" id="addTaskButton">
+        <button class="dropdownparent globalButton" id="addTaskButton">
             +
         </button>
     </div>
