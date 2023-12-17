@@ -22,7 +22,7 @@ validate_token("https://infotoast.org/todos/mobile.php");
 <body>
 <div class="top">
     <div class="topleft">
-        <h1>To-Do Lists</h1>
+        <h2>To-Do Lists</h2>
     </div>
     <div class="topright">
         <a href="https://infotoast.org/sso/" class="divLink" id="loginButton">
