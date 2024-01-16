@@ -61,14 +61,6 @@ if (!$blocked) {
     $conn->commit();
 }
 
-function get_random_image() {
-    $rand = rand(0, 163);
-    if ($rand == 98) {
-        return get_random_image();
-    }
-    return $rand;
-}
-
 if ($blocked) {
     die("<!DOCTYPE html><html lang='en'><head><title>401 Unauthorized</title><link rel='stylesheet' type='text/css' href='resources/css/view.css'/><style>" .
             ".bg {\n" .
@@ -102,7 +94,7 @@ if ($blocked) {
         <style>
             .bg {
                 background-image: url("https://infotoast.org/images/<?php
-            echo get_random_image();
+            echo rand(0, 135);
 ?>.jpg");
                 background-size: 100% 100%;
                 width: 100%;
