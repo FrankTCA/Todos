@@ -155,10 +155,12 @@ function add_task() {
     update_progress(global_task);
 
     display_task(global_task, "global_task");*/
+    let enc_name = encryptText(name);
+    let enc_desc = encryptText(desc);
     $("#addTaskButton").click();
     $.post("action/create_todo.php", {
-        task_name: name,
-        description: desc,
+        task_name: enc_name.toString(),
+        description: enc_desc.toString(),
         due: due,
         subtask: parent_id
     }, function(data, status) {
@@ -345,6 +347,12 @@ function get_todos(surtask_id) {
             var dueDateParts = dueDateRaw.split("/");
             var dueDate = new Date(dueDateParts[2], dueDateParts[0] - 1, dueDateParts[1]);
             if (element.how_complete < 1.0) {
+                var name = "";
+                var desc = "";
+                if (element.encrypted) {
+                    name = decryptText(element.name);
+                    desc = decryptText(element.desc);
+                }
                 print_task(element.id, element.name, element.description, element.due_date, Math.round(Number(element.how_complete)*100), surtask_id);
             }
         }

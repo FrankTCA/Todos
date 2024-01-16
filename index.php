@@ -16,6 +16,8 @@ validate_token("https://infotoast.org/todos/");
     <script type="text/javascript" src="resources/js/jquery-3.7.1.min.js"></script>
     <script type="text/javascript" src="resources/js/jquery-ui.min.js"></script>
     <script type="text/javascript" src="resources/js/moment.min.js"></script>
+    <script type="text/javascript" src="../crypto/aes.js"></script>
+    <script type="text/javascript" src="../crypto/key-runtime.js"></script>
     <script type="text/javascript" src="resources/js/index.js"></script>
     <script type="text/javascript" src="resources/js/detect-mobile.js"></script>
 </head>
