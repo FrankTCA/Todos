@@ -72,7 +72,7 @@ function get_random_image() {
 if ($blocked) {
     die("<!DOCTYPE html><html lang='en'><head><title>401 Unauthorized</title><link rel='stylesheet' type='text/css' href='resources/css/view.css'/><style>" .
             ".bg {\n" .
-                "background-image: url('https://infotoast.org/images/" . rand(0,135) .
+                "background-image: url('https://infotoast.org/images/" . rand(0,168) .
 ".jpg');\n" .
 "background-size: 100% 100%;\n" .
 "width: 100%;\n" .
