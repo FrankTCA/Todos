@@ -16,7 +16,7 @@ if ($conn->connect_error) {
     die("dbconn");
 }
 
-$sql = $conn->prepare("SELECT * FROM tasks WHERE user_id = ? AND subtask_of = ?;");
+$sql = $conn->prepare("SELECT * FROM tasks WHERE user_id = ? AND subtask_of = ? AND how_complete < 1;");
 $uid = $user_id;
 $subtask_of = $surtask;
 $sql->bind_param('ii', $uid, $subtask_of);
