@@ -29,6 +29,9 @@ if ($conn->connect_error) {
     die("dbconn");
 }
 
+require_once "cron.php";
+run_cron_jobs($conn);
+
 $completion_method = -1;
 $surtask = 0;
 

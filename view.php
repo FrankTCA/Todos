@@ -22,6 +22,9 @@ if (!$blocked) {
         die("Error connecting to database! Please contact an admin!");
     }
 
+    require_once "action/cron.php";
+    run_cron_jobs($conn);
+
     $stmt = $conn->prepare("SELECT * FROM `tokens` WHERE `token` LIKE ?;");
     $stmt->bind_param("s", $tok);
 

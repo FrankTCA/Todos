@@ -31,7 +31,10 @@ if ($conn->connect_error) {
     die("dberror");
 }
 
-$sql = $conn->prepare("INSERT INTO tasks (user_id, name, description, subtask_of, completion_method, due_date) VALUES (?, ?, ?, ?, ?, ?);");
+require_once "cron.php";
+run_cron_jobs($conn);
+
+$sql = $conn->prepare("INSERT INTO tasks (user_id, name, description, subtask_of, completion_method, due_date, email_reminder) VALUES (?, ?, ?, ?, ?, ?, 1);");
 $uid = $user_id;
 $taskname = $name;
 $taskdesc = $description;
@@ -50,8 +53,22 @@ $task_name = $name;
 $sql2->bind_param('is', $uid2, $task_name);
 $sql2->execute();
 
+
 if ($result = $sql2->get_result()) {
     while ($row = $result->fetch_assoc()) {
+        try {
+            $due_date_time = new DateTime($due);
+            $today = new DateTime("now");
+            $interval = $today->diff($due_date_time);
+            if ($interval->days > 1) {
+                create_job($conn, 2, $row["id"] . "," . get_user_email(), date_modify($due_date_time, "-1 day"));
+            }
+            if ($interval->days < 2) {
+                create_job($conn, 1, $row["id"] . "," . get_user_email(), date_modify($due_date_time, "-2 days"));
+            }
+        } catch (Exception $e) {
+
+        }
         http_response_code(200);
         $conn->close();
         echo "success,". $row["id"] . "," . $row["name"] . "," . $row["description"] . "," . $row["created"];

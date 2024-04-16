@@ -17,6 +17,9 @@ if ($conn->connect_error) {
     die("dbconn");
 }
 
+require_once "cron.php";
+run_cron_jobs($conn);
+
 $sql = $conn->prepare("SELECT * FROM tasks WHERE id = ? AND user_id = ?;");
 $id = $task_id;
 $uid = $user_id;
