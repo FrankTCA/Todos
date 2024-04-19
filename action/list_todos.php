@@ -30,7 +30,7 @@ if ($result = $sql->get_result()) {
     echo '{"tasks":[';
     $counter = 0;
     while ($row = $result->fetch_assoc()) {
-        echo "{\"id\": " . $row['id'] . ", \"name\": \"" . $row["name"] . "\", \"description\":\"" . $row["description"] . "\", \"completion_method\":" . $row["completion_method"] . ", \"how_complete\":" . $row["how_complete"] . ", \"due_date\":\"" . $row["due_date"] . "\", \"created\":\"" . $row["created"] . "\"}";
+        echo "{\"id\": " . $row['id'] . ", \"name\": \"" . $row["name"] . "\", \"description\":\"" . $row["description"] . "\", \"completion_method\":" . $row["completion_method"] . ", \"how_complete\":" . $row["how_complete"] . ", \"due_date\":\"" . $row["due_date"] . "\", \"created\":\"" . $row["created"] . "\", \"reminder\": \"" . $row["email_reminder"] . "\"}";
         $counter++;
         if ($counter < $result->num_rows) {
             echo ",";
