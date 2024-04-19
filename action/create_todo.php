@@ -61,10 +61,10 @@ if ($result = $sql2->get_result()) {
             $today = new DateTime("now");
             $interval = $today->diff($due_date_time);
             if ($interval->days > 1) {
-                create_job($conn, 2, $row["id"] . "," . get_user_email(), date_modify($due_date_time, "-1 day"));
+                create_job($conn, 2, $row["id"] . "," . get_user_email(), date('Y-m-d H:i:s', $due_date_time->getTimestamp()/*mktime(0, 0, 0, date("m")  , date("d")-1, date("Y"))*/));
             }
-            if ($interval->days < 2) {
-                create_job($conn, 1, $row["id"] . "," . get_user_email(), date_modify($due_date_time, "-2 days"));
+            if ($interval->days > 2) {
+                create_job($conn, 1, $row["id"] . "," . get_user_email(), date('Y-m-d H:i:s', strtotime('-1 days', $due_date_time->getTimestamp())/*mktime(0, 0, 0, date("m")  , date("d")-2, date("Y"))*/));
             }
         } catch (Exception $e) {
 

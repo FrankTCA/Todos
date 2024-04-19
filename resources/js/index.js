@@ -166,7 +166,7 @@ function add_task() {
             $("#errorMsg").text("Database error! Please contact frank@infotoast.org.");
         } else if (data.startsWith("success")) {
             var data_split = data.split(",");
-            print_task(data_split[1], name, desc, due, 0, parent_id);
+            print_task(data_split[1], name, desc, due, 0, parent_id, true);
         } else {
             $("#errorMsg").text(data);
         }

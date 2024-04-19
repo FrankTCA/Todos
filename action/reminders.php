@@ -1,24 +1,24 @@
 <?php
+require "include_phpmailer.php";
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
 use PHPMailer\PHPMailer\Exception;
-function remind_tomorrow($conn, $params, $task_id) {
+function remind_tomorrow($conn, $params, $cron_id) {
     $params_split = explode(",", $params);
     $task_id = $params_split[0];
     $email = $params_split[1];
 
-    $conn->prepare("SELECT * FROM tasks WHERE id = ?;");
-    $conn->bind_param("i", $task_id);
-    $conn->execute();
+    $sql = $conn->prepare("SELECT * FROM tasks WHERE id = ?;");
+    $sql->bind_param("i", $task_id);
+    $sql->execute();
 
-    if ($result = $conn->get_result()) {
+    if ($result = $sql->get_result()) {
         while ($row = $result->fetch_assoc()) {
             $task_name = $row["name"];
             $task_description = $row["description"];
             $email_enabled = $row["email_reminder"];
             $task_complete = $row["how_complete"];
             if ($email_enabled && $task_complete < 1) {
-                require "include_phpmailer.php";
                 $mail = new PHPMailer(true);
                 try {
                     $mail->SMTPDebug = SMTP::DEBUG_OFF;
@@ -48,10 +48,9 @@ function remind_tomorrow($conn, $params, $task_id) {
         }
     }
 
-    $conn->prepare("UPDATE crontab SET completed = 1 WHERE id = ?;");
-    $conn->bind_param("i", $task_id);
-    $conn->execute();
-    $conn->close();
+    $sql2 = $conn->prepare("UPDATE crontab SET completed = 1 WHERE id = ?;");
+    $sql2->bind_param("i", $cron_id);
+    $sql2->execute();
 }
 
 function remind_today($conn, $params, $task_id) {
@@ -59,11 +58,11 @@ function remind_today($conn, $params, $task_id) {
     $task_id = $params_split[0];
     $email = $params_split[1];
 
-    $conn->prepare("SELECT * FROM tasks WHERE id = ?;");
-    $conn->bind_param("i", $task_id);
-    $conn->execute();
+    $sql = $conn->prepare("SELECT * FROM tasks WHERE id = ?;");
+    $sql->bind_param("i", $task_id);
+    $sql->execute();
 
-    if ($result = $conn->get_result()) {
+    if ($result = $sql->get_result()) {
         while ($row = $result->fetch_assoc()) {
             $task_name = $row["name"];
             $task_description = $row["description"];
@@ -100,8 +99,7 @@ function remind_today($conn, $params, $task_id) {
         }
     }
 
-    $conn->prepare("UPDATE crontab SET completed = 1 WHERE id = ?;");
-    $conn->bind_param("i", $task_id);
-    $conn->execute();
-    $conn->close();
+    $sql2 = $conn->prepare("UPDATE crontab SET completed = 1 WHERE id = ?;");
+    $sql2->bind_param("i", $task_id);
+    $sql2->execute();
 }
