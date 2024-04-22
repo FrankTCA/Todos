@@ -166,7 +166,7 @@ function add_task() {
             $("#errorMsg").text("Database error! Please contact frank@infotoast.org.");
         } else if (data.startsWith("success")) {
             var data_split = data.split(",");
-            print_task(data_split[1], name, desc, due, 0, parent_id);
+            print_task(data_split[1], name, desc, due, 0, parent_id, true);
         } else {
             $("#errorMsg").text(data);
         }
@@ -243,7 +243,7 @@ function toggle_completion(parent_id, i) {
     display_task(global_task, "global_task");
 }
 
-function print_task(id, name, description, due_date, progress, subtask_of_id) {
+function print_task(id, name, description, due_date, progress, subtask_of_id, reminder) {
     if (get_task_from_id(id) != null) {
         return;
     }
@@ -274,7 +274,7 @@ function print_task(id, name, description, due_date, progress, subtask_of_id) {
         + "<div class='taskSeperator'></div>"
         + "<div class='tasknameDesc taskSeperator'><span class='taskName'>" + name + "</span><br><br>" + "<span class='taskDesc'>" + description + "</span></div>"
         + "<div class='taskSeperator'><span class='dueDate'>" + due_date + "</span></div>"
-        + "<div id='progressBar_" + String(id) + "'></div></li></div>"
+        + "</button><div class='switchArea'><span class='remindMe'>Remind me?</span><br><label class='switch'><input type='checkbox' onclick='toggle_reminder(" + id + ")' id='reminder_switch_" + id + "'><span class='slider'></span></label></div>"        + "<div id='progressBar_" + String(id) + "'></div></li></div>"
         + "<div class='task_list' style='margin-left: 2em' id='" + String(id) + "_subtasks'></div>"
     if (subtask_of_id == 0) {
         $("#global_task_subtasks").append(toAppend);
@@ -292,15 +292,34 @@ function print_task(id, name, description, due_date, progress, subtask_of_id) {
     if (moment().startOf('day') > moment(due_date, "MM/DD/YYYY").startOf('day')) {
         $("#task_" + id).css("color", "red");
     }
+
+    document.getElementById("reminder_switch_" + id).checked = reminder;
     open_tasks.push({
         id: id,
         name: name,
         description: description,
         due_date: due_date,
         progress: progress,
-        parent: subtask_of_id
+        parent: subtask_of_id,
+        reminder: reminder
     });
     recurse_parent_progress(id);
+}
+
+function toggle_reminder(id) {
+    let task = get_task_from_id(id);
+    var option;
+    if (task.reminder) {
+        option = "off";
+    } else {
+        option = "on";
+    }
+
+    let xhr = new XMLHttpRequest();
+    xhr.open("GET", "https://infotoast.org/todos/action/toggle_reminder.php?id=" + id + "&mode=" + option);
+    xhr.send();
+    task.reminder = !task.reminder;
+    document.getElementById("reminder_switch_" + id).checked = task.reminder;
 }
 
 function complete_task(id) {
@@ -345,7 +364,13 @@ function get_todos(surtask_id) {
             var dueDateParts = dueDateRaw.split("/");
             var dueDate = new Date(dueDateParts[2], dueDateParts[0] - 1, dueDateParts[1]);
             if (element.how_complete < 1.0) {
-                print_task(element.id, element.name, element.description, element.due_date, Math.round(Number(element.how_complete)*100), surtask_id);
+                var reminder;
+                if (element.reminder === "1") {
+                    reminder = true;
+                } else {
+                    reminder = false;
+                }
+                print_task(element.id, element.name, element.description, element.due_date, Math.round(Number(element.how_complete)*100), surtask_id, reminder);
             }
         }
     });
