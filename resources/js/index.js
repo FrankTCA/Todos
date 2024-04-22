@@ -273,7 +273,7 @@ function print_task(id, name, description, due_date, progress, subtask_of_id, re
         "<line fill=\"#FFFFFF\" stroke=\"#000000\" stroke-width=\"10\" stroke-miterlimit=\"10\" x1=\"33.5\" y1=\"39.5\" x2=\"96.4\" y2=\"39.5\"/>\n" +
         "<polyline fill=\"#FFFFFF\" stroke=\"#000000\" stroke-width=\"10\" stroke-miterlimit=\"10\" points=\"24,82 63,117.1 100.2,82 \"/>\n" +
         "</svg>\n"
-        + "</button><label class='switch'><input type='checkbox' onclick='toggle_reminder(" + id + ")' id='reminder_switch_" + id + "'><span class='slider'></span></label>"
+        + "</button><div class='switchArea'><span class='remindMe'>Remind me?</span><br><label class='switch'><input type='checkbox' onclick='toggle_reminder(" + id + ")' id='reminder_switch_" + id + "'><span class='slider'></span></label></div>"
         + "</div><div id='progressBar_" + String(id) + "'></div></li></div>"
         + "<div class='task_list' style='margin-left: 2em' id='" + String(id) + "_subtasks'></div>"
     if (subtask_of_id == 0) {
