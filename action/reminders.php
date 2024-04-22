@@ -53,7 +53,7 @@ function remind_tomorrow($conn, $params, $cron_id) {
     $sql2->execute();
 }
 
-function remind_today($conn, $params, $task_id) {
+function remind_today($conn, $params, $cron_id) {
     $params_split = explode(",", $params);
     $task_id = $params_split[0];
     $email = $params_split[1];
@@ -100,6 +100,6 @@ function remind_today($conn, $params, $task_id) {
     }
 
     $sql2 = $conn->prepare("UPDATE crontab SET completed = 1 WHERE id = ?;");
-    $sql2->bind_param("i", $task_id);
+    $sql2->bind_param("i", $cron_id);
     $sql2->execute();
 }
