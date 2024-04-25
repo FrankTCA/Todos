@@ -65,7 +65,7 @@ if (!$blocked) {
 }
 
 function get_random_image() {
-    $rand = rand(0, 163);
+    $rand = rand(0, 203);
     if ($rand == 98) {
         return get_random_image();
     }
