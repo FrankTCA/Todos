@@ -7,9 +7,9 @@ function edit_task(id) {
     let originalTaskDesc = taskDescObj.innerText;
     let originalDueDate = taskDueDateObj.innerText;
 
-    $(taskNameObj).prepend('<input type="text" class="taskName taskNameEdit" value="' + originalTaskName + '">');
-    $(taskDescObj).prepend('<input type="text" class="taskDesc taskDescEdit" value="' + originalTaskDesc + '">');
-    $(taskDueDateObj).prepend('<input type="text" class="dueDate dueDateEdit" value="' + originalDueDate + '">');
+    $(taskNameObj).before('<input type="text" class="taskName taskNameEdit taskbtn" value="' + originalTaskName + '">');
+    $(taskDescObj).before('<input type="text" class="taskDesc taskDescEdit taskbtn" value="' + originalTaskDesc + '">');
+    $(taskDueDateObj).before('<input type="text" class="dueDate dueDateEdit taskbtn" value="' + originalDueDate + '">');
 
     $(".dueDateEdit").datepicker();
 
@@ -18,7 +18,7 @@ function edit_task(id) {
     $(taskDueDateObj).hide();
 
     let editBtn = task.querySelector(".editBtn");
-    $(editBtn).prepend('<button class="editBtn" onclick="commit_edit(' + id + ');">📝</button>');
+    $(editBtn).before('<button class="editBtn taskbtn" onclick="commit_edit(' + id + ');">📝</button>');
     $(editBtn).hide();
 }
 
@@ -33,7 +33,7 @@ function commit_edit(id) {
     const newDueDate = taskDueDateObj.value;
 
     $.post("action/edit_task.php", {
-        id: id,
+        taskid: id,
         name: newName,
         description: newDesc,
         due_date: newDueDate,
