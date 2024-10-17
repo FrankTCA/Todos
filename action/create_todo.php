@@ -13,6 +13,11 @@ $description = $_POST["description"];
 $due = $_POST["due"];
 $user_id = get_user_id();
 
+if (!validate_date($due)) {
+    http_response_code(400);
+    die("dateformat");
+}
+
 if (isset($_POST["subtask"])) {
     $subtask_of = $_POST["subtask"];
 } else {

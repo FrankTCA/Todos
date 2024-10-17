@@ -1,4 +1,8 @@
 <?php
+function validate_date($date, $format = "m/d/Y"): bool {
+    $d = DateTime::createFromFormat($format, $date);
+    return $d && strtolower($d->format($format)) === strtolower($date);
+}
 
 function recurse_surtasks($surtask): void {
     global $completion_method;
