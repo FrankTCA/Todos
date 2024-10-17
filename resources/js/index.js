@@ -252,7 +252,7 @@ function print_task(id, name, description, due_date, progress, subtask_of_id, re
         + "<div class='taskSeperator'><button onclick='complete_task(" + id + ")' class='taskbtn'>✅</button></div>"
         + "<div class='tasknameDesc taskSeperator'><span class='taskName'>" + name + "</span><br><br>" + "<span class='taskDesc'>" + description + "</span></div>"
         + "<div class='taskSeperator'><span class='dueDate'>" + due_date + "</span></div>"
-        +  "<div class='controlButtons taskSeperator'><button onclick='delete_task(" + String(id) + ")' class='taskbtn'>🗑️</button>"
+        +  "<div class='controlButtons taskSeperator'><button class='editBtn' onclick='edit_task(" + id + ")'>✎️</button><button onclick='delete_task(" + String(id) + ")' class='taskbtn'>🗑️</button>"
         + "<button onclick='subtasks_click(" + String(id) + ")' class='taskbtn'>"
         + '<svg version="1.1" id="Layer_1" width="10px" height="10px" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"\n' +
         '\t viewBox="0 0 128 128" enable-background="new 0 0 128 128" xml:space="preserve">\n' +

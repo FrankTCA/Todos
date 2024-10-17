@@ -164,6 +164,8 @@ function add_task() {
     }, function(data, status) {
         if (data.startsWith("dberror")) {
             $("#errorMsg").text("Database error! Please contact frank@infotoast.org.");
+        } else if (data.startsWith("dateformat")) {
+            $("#errorMsg").text("Date is in invalid format. Please use MM/DD/YYYY.");
         } else if (data.startsWith("success")) {
             var data_split = data.split(",");
             print_task(data_split[1], name, desc, due, 0, parent_id, true);
@@ -249,7 +251,7 @@ function print_task(id, name, description, due_date, progress, subtask_of_id, re
     }
 
     const toAppend = "<div class='task' id='task_" + String(id) + "'><li>"
-        +   "<div class='controlButtons taskSeperator'><button onclick='complete_task(" + id + ")' class='taskbtn'>✅</button><button onclick='delete_task(" + String(id) + ")' class='taskbtn'>🗑️</button>"
+        +   "<div class='controlButtons taskSeperator'><button onclick='complete_task(" + id + ")' class='taskbtn'>✅</button><button class='editBtn' onclick='edit_task(" + id + ")'>✎️</button><button onclick='delete_task(" + String(id) + ")' class='taskbtn'>🗑️</button>"
         + "<button onclick='subtasks_click(" + String(id) + ")' class='taskbtn'>"
         + '<svg version="1.1" id="Layer_1" width="10px" height="10px" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"\n' +
         '\t viewBox="0 0 128 128" enable-background="new 0 0 128 128" xml:space="preserve">\n' +
