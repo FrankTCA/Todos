@@ -15,12 +15,12 @@
 }
 
 h1 {
-    font-family: "Arial", sans-serif;
+    font-family: "Mallory-Medium", sans-serif;
     padding-top: 0.3em;
 }
 
 h2 {
-    font-family: "Roboto Light", sans-serif;
+    font-family: "Mallory-Medium", sans-serif;
 }
 
 .topright {
@@ -59,7 +59,7 @@ a:active {
 }
 
 text {
-    font-family: "Roboto Light", sans-serif;
+    font-family: "Mallory-Medium", sans-serif;
 }
 
 #loginText {
@@ -101,13 +101,13 @@ text {
     vertical-align: top;
     margin-right: -10px;
     color: aliceblue;
-    font-family: "Roboto Light", sans-serif;
+    font-family: "Mallory-Medium", sans-serif;
 }
 
 .appName {
     text-align: center;
     color: aliceblue;
-    font-family: "Roboto Light", sans-serif;
+    font-family: "Mallory-Medium", sans-serif;
     padding-bottom: 1em;
 }
 
