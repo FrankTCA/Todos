@@ -65,7 +65,7 @@ if (!$blocked) {
 }
 
 function get_random_image() {
-    $rand = rand(0, 274);
+    $rand = rand(0, 307);
     if ($rand == 98) {
         return get_random_image();
     }
@@ -75,7 +75,7 @@ function get_random_image() {
 if ($blocked) {
     die("<!DOCTYPE html><html lang='en'><head><title>401 Unauthorized</title><link rel='stylesheet' type='text/css' href='resources/css/view.css'/><style>" .
             ".bg {\n" .
-                "background-image: url('https://infotoast.org/images/" . rand(0,168) .
+                "background-image: url('https://infotoast.org/images/" . get_random_image() .
 ".jpg');\n" .
 "background-size: 100% 100%;\n" .
 "width: 100%;\n" .
